@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101820">
+<title>AI Atlas — Expanded map</title>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#151f29;--line:#2b3945;--text:#e6edf0;--muted:#9aaaae;--mint:#9de0c4;font-family:Inter,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0}button,input,select,a{font:inherit}button{cursor:pointer;color:inherit;background:transparent;border:0}button:hover{background:#ffffff0c}a{color:var(--mint);text-decoration:none}:focus-visible{outline:2px solid var(--mint);outline-offset:3px}button:disabled{opacity:.4;cursor:default}
+.app{height:100dvh;display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:72px minmax(0,1fr)}header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 25px;border-bottom:1px solid var(--line);gap:20px;background:#121c25}.brand{display:flex;align-items:center;gap:12px}.mark{font-size:26px;color:var(--mint)}.brand strong{font-size:18px;letter-spacing:-.5px}.edition{font-size:10px;color:var(--muted);letter-spacing:2px;padding-left:16px;border-left:1px solid var(--line)}.map-picker{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:11px}.map-picker select{color:var(--text);background:#192630;border:1px solid #374753;border-radius:7px;padding:8px 30px 8px 10px;cursor:pointer}
+aside{min-height:0;overflow:auto;border-right:1px solid var(--line);background:#121c25;padding:24px 20px;scrollbar-width:thin}.eyebrow{font-size:10px;letter-spacing:1.7px;color:var(--mint);text-transform:uppercase;font-weight:600}aside h1{font-family:Georgia,serif;font-size:29px;font-weight:400;line-height:1.12;letter-spacing:-.8px;margin:12px 0}.intro{font-size:12px;line-height:1.7;color:var(--muted)}.search{width:100%;border:1px solid #374753;border-radius:8px;padding:11px 12px;background:#192630;color:var(--text);font-size:12px;margin:8px 0 18px}.section-title{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}.section-title button{font-size:11px;letter-spacing:0;text-transform:none;color:var(--mint)}.group-button{display:flex;width:100%;gap:10px;align-items:center;text-align:left;padding:8px 2px;border-radius:5px;font-size:12px}.swatch{width:7px;height:7px;border-radius:50%;background:var(--c);flex-shrink:0}.group-button small{margin-left:auto;color:var(--muted);font-size:10px}.route{width:100%;display:block;padding:10px 11px;text-align:left;margin:6px 0;border:1px solid var(--line);border-radius:7px;font-size:12px}.route span{display:block;color:var(--muted);font-size:10px;margin-top:4px}.route[aria-pressed=true]{border-color:#82bca7;background:#20332f}.result{display:block;text-align:left;width:100%;padding:9px 6px;font-size:12px;border-bottom:1px solid #ffffff08}.result small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.no-result{font-size:12px;color:var(--muted)}
+.selection{border-top:1px solid var(--line);margin-top:23px;padding-top:20px}.selection h2{font-size:21px;letter-spacing:-.6px;margin:9px 0}.selection p{font-size:12px;line-height:1.7;color:#b8c7ce}.selection .note{border-left:2px solid var(--mint);padding-left:10px;color:var(--text)}.relation{display:block;width:100%;text-align:left;padding:10px 0;border-top:1px solid #ffffff0c;font-size:11px;line-height:1.6}.relation em{font-style:normal;color:var(--mint)}.relation strong{font-weight:500}.relation span{color:var(--muted)}.primary{border:1px solid #547b6c;background:#20362e;color:#c5f1de;border-radius:6px;padding:9px 12px;font-size:11px}
+main{min-width:0;min-height:0;display:flex;flex-direction:column}.toolbar{display:flex;justify-content:space-between;align-items:center;padding:20px 25px 16px;gap:14px;flex-wrap:wrap}.toolbar h2{font-size:19px;font-weight:500;letter-spacing:-.5px;margin:0 0 5px}.toolbar p{margin:0;color:var(--muted);font-size:11px}.view-switch{display:flex;gap:3px;padding:4px;border:1px solid var(--line);border-radius:8px}.view-switch button{padding:7px 11px;font-size:11px;border-radius:5px}.view-switch button[aria-pressed=true]{background:#30443e;color:#d7f2e5}.map{position:relative;overflow:hidden;flex:1;min-height:180px;touch-action:none;background-image:radial-gradient(#647b8229 .8px,transparent .8px),radial-gradient(ellipse at 45% 45%,#21413624,transparent 65%);background-size:22px 22px,100% 100%;cursor:grab}.map.dragging{cursor:grabbing}.world{position:absolute;transform-origin:0 0;left:0;top:0}.wires{position:absolute;width:1px;height:1px;overflow:visible;pointer-events:none}.wire{fill:none;stroke:#778e9f;stroke-width:1.25;opacity:.28}.wire.cross{stroke-dasharray:5 5;opacity:.2}.wire.hot{opacity:.88;stroke:#a7d9c4;stroke-width:2}.wire.faint{opacity:.045}.edge-label{font:12px "Segoe UI",sans-serif;fill:#e4f7ee;paint-order:stroke;stroke:#101820;stroke-width:6;stroke-linejoin:round;text-anchor:middle}.region{position:absolute;border:1px solid color-mix(in srgb,var(--c) 13%,transparent);border-radius:25px;background:color-mix(in srgb,var(--c) 3%,transparent);pointer-events:none}.region-title{position:absolute;top:15px;left:18px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--c)}.node{position:absolute;transform:translate(-50%,-50%);width:170px;min-height:48px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--c) 40%,#25313c);background:#17232e;border-radius:9px;text-align:left;box-shadow:0 4px 12px #0002;font-size:13px;line-height:1.25;display:flex;align-items:center;gap:8px;transition:opacity .15s,background .15s;cursor:pointer}.node .dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--c)}.node.hub{background:color-mix(in srgb,var(--c) 12%,#17232e);font-weight:600;font-size:15px;min-height:54px;border-color:color-mix(in srgb,var(--c) 60%,#25313c)}.node:hover,.node.selected{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,#17232e);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 13%,transparent)}.node.faint{opacity:.2}.node.neighbor{border-color:var(--c)}.node.selected{z-index:2}.map-hint{position:absolute;bottom:14px;left:20px;color:var(--muted);font-size:10px;pointer-events:none}.map-status{position:absolute;top:16px;left:20px;font-size:10px;color:var(--muted);background:#101820d9;padding:6px 9px;border-radius:5px;pointer-events:none}.footer{border-top:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:6px}.line{width:22px;border-top:1px solid #a1b7c2}.line.dashed{border-top-style:dashed}.controls{display:flex;align-items:center;gap:5px}.controls button{padding:6px 10px;border:1px solid var(--line);border-radius:5px;font-size:12px}.controls output{min-width:40px;text-align:center;font-size:10px;color:var(--muted)}.mobile{display:none}.small-note{font-size:10px!important;color:var(--muted)!important}
+@media(max-width:1000px){.app{grid-template-columns:270px minmax(0,1fr)}.edition{display:none}.toolbar{padding:16px}.toolbar h2{font-size:17px}.footer{padding:10px 14px}}
+@media(max-width:650px){.app{grid-template-columns:1fr;grid-template-rows:60px minmax(0,1fr)}header{padding:0 16px}.map-picker label{display:none}.map-picker select{max-width:155px}.brand .mark{display:none}aside{display:none;position:absolute;top:60px;bottom:0;left:0;width:min(320px,92vw);z-index:10;box-shadow:12px 0 40px #0008}.app.sidebar-open aside{display:block}.mobile{display:inline-block;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:11px}.toolbar{gap:10px}.toolbar h2{font-size:16px}.view-switch button{padding:7px 8px}.search{font-size:16px}.map-hint{font-size:9px;left:12px;right:12px}.controls{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header><div class="brand"><span class="mark" aria-hidden="true">✳</span><strong>AI Atlas</strong><span class="edition">EXPANDED MAP</span></div><div class="map-picker"><label for="map-depth">Map depth</label><select id="map-depth" onchange="location.href=this.value"><option value="graph.html">Foundational</option><option value="graph-rich.html" selected>Expanded / methods</option></select></div></header>
+<aside id="sidebar" aria-label="Knowledge explorer">
+ <div class="eyebrow">The methods-level map</div><h1>More context.<br>More connections.</h1><p class="intro">Explore representative algorithms, model families, training approaches, and how they connect. Each region can later become its own map.</p>
+ <input type="search" class="search" id="search" placeholder="Find a concept…  /" aria-label="Search concepts and descriptions">
+ <div id="results"></div>
+ <div id="explorer"><div class="section-title">Explore a region <button id="reset">Reset</button></div><div id="groups"></div>
+ <div class="section-title">Follow an idea</div><div id="routes"></div></div>
+ <section class="selection" id="selection" aria-live="polite"></section>
+</aside>
+<main><div class="toolbar"><div><h2 id="view-title">The whole field, woven together.</h2><p id="view-subtitle">Select a concept to illuminate its connections.</p></div><button class="mobile" id="menu" aria-expanded="false" aria-controls="sidebar">☰ Explore</button><div class="view-switch" aria-label="Map view"><button id="full" aria-pressed="true">Full network</button><button id="local" aria-pressed="false">Local view</button></div></div>
+<div class="map" id="map" aria-label="AI and machine learning relationship map"><div class="world" id="world"><div id="regions"></div><svg class="wires" id="wires" aria-hidden="true"></svg><div id="nodes"></div></div><div class="map-status" id="status"></div><div class="map-hint">Click a concept · Drag nodes to rearrange · Drag background to pan · Scroll or pinch to zoom</div></div>
+<footer class="footer"><div class="legend"><span><i class="line"></i>Within a region</span><span><i class="line dashed"></i>Across regions</span><span>→ Directed relationship</span></div><div class="controls"><button id="clear" title="Clear highlights">Clear</button><button id="minus" aria-label="Zoom out">−</button><output id="zoom">100%</output><button id="plus" aria-label="Zoom in">+</button><button id="fit">Fit</button><button id="export">Save SVG ↓</button></div></footer></main>
+</div>
+<script>
+'use strict';
+// Curated nodes: [id, label, definition, optional distinction]. Regions are not an ontology.
+const GROUPS=[
+['foundations','Foundations','#b7bfdf',0,0,[
+ ['math','Mathematics','The language used to describe models, uncertainty, and optimization.'],
+ ['linear','Linear algebra','Vectors, matrices, tensors, and transformations underpin numerical representations.'],
+ ['calculus','Calculus','Derivatives describe how changes in parameters affect an objective.'],
+ ['probability','Probability & statistics','Represent uncertainty, estimate quantities, and learn from samples.'],
+ ['optimization','Optimization','Choose parameters or decisions to improve an objective under constraints.'],
+ ['information','Information theory','Entropy, cross-entropy, and divergence quantify information and distribution differences.'],
+ ['algorithms','Algorithms & computation','Data structures, complexity, and numerical methods make AI procedures executable.']]],
+['learning','AI & learning','#9de0c4',1,0,[
+ ['ai','Artificial intelligence','The broad field of building systems for tasks involving perception, reasoning, learning, and action.','AI includes learning-based, symbolic, probabilistic, and hybrid approaches.'],
+ ['ml','Machine learning','Methods that improve task performance by learning patterns or behavior from data or experience.','Learning paradigm, model architecture, and application domain are different axes.'],
+ ['supervised','Supervised learning','Learn from examples with target labels or outputs.'],
+ ['unsupervised','Unsupervised learning','Find structure in data without supplied task labels.'],
+ ['selfsupervised','Self-supervised learning','Construct training targets from the data itself, such as masked or next-token prediction.','Usually treated as a form of unsupervised learning; the training objective still supplies targets.'],
+ ['semisupervised','Semi-supervised learning','Combine a smaller labeled dataset with additional unlabeled data.'],
+ ['transfer','Transfer learning','Reuse knowledge learned on one task or dataset for another.'],
+ ['active','Active learning','Select which examples should be labeled to use annotation effort efficiently.'],
+ ['contrastive','Contrastive learning','Learn representations by bringing related examples closer and separating unrelated examples.'],
+ ['federated','Federated learning','Train across distributed data holders while keeping raw data decentralized.']]],
+['training','Training & adaptation','#e7bd82',2,0,[
+ ['pretrain','Pretraining','Learn reusable parameters from a broad training corpus before task-specific adaptation.'],
+ ['finetune','Fine-tuning','Update a pretrained model using additional task or domain data.'],
+ ['sft','Supervised fine-tuning','Fine-tune on examples of desired inputs and outputs, including instruction-response pairs.'],
+ ['lora','LoRA / adapters','Adapt models using a limited set of trainable parameters.'],
+ ['rlhf','RLHF','Use human feedback to shape a reward signal and optimize model behavior with reinforcement learning.'],
+ ['dpo','DPO','Train on preference pairs using a direct optimization objective.','DPO is an alternative to an explicit reward-model-plus-RL training loop.'],
+ ['backprop','Backpropagation','Efficiently compute parameter gradients through a differentiable computation graph.'],
+ ['gradient','Gradient-based learning','Update parameters using gradients; SGD and Adam are common optimizers.'],
+ ['distillation','Knowledge distillation','Train a smaller or specialized model to reproduce useful behavior from a teacher model.'],
+ ['quantization','Quantization','Represent weights or activations with lower numerical precision to reduce inference cost.']]],
+['systems','Systems & agents','#90cce0',3,0,[
+ ['agents','AI agents','Systems that select actions and interact with an environment to pursue goals.','An agent is a system, not a synonym for an LLM. Agents can be symbolic, learned, or hybrid.'],
+ ['rag','Retrieval-augmented generation','Condition generation on information retrieved from an external collection.','RAG changes the context available to generation; it need not change model weights.'],
+ ['retrieval','Information retrieval','Find relevant documents or items using lexical, vector, or hybrid search.'],
+ ['tools','Tool use','Invoke external functions, APIs, or software to obtain information or take actions.'],
+ ['memory','State & memory','Maintain task state and retain information across system interactions.'],
+ ['orchestration','Workflow orchestration','Coordinate steps, models, tools, retries, and human handoffs.'],
+ ['kg','Knowledge graphs','Represent entities and relationships explicitly for querying and reasoning.'],
+ ['vector','Vector indexes','Index vector representations for similarity search.']]],
+['symbolic','Reasoning & search','#d7aa91',0,1,[
+ ['symbolic','Symbolic AI','Represent knowledge with explicit symbols, rules, and structures.'],
+ ['logic','Logic & reasoning','Derive conclusions from premises using formal rules.'],
+ ['search','Search','Explore candidate states or solutions, often using heuristics.'],
+ ['planning','Planning','Choose sequences of actions to achieve goals, often using a model of state transitions.'],
+ ['constraints','Constraint solving','Find assignments satisfying constraints; includes CSP and SAT methods.'],
+ ['expert','Expert systems','Use encoded domain knowledge and rules to support decisions.'],
+ ['neurosymbolic','Neuro-symbolic AI','Combine learned representations with explicit symbolic structure or reasoning.'],
+ ['ontology','Ontologies','Define concepts, categories, properties, and relationships in a formal domain model.']]],
+['architectures','Models & architectures','#b5a2e0',1,1,[
+ ['deep','Deep learning','Learn with neural networks containing multiple layers of representation.','Deep learning is a family of ML methods; it can use many learning paradigms.'],
+ ['nn','Neural networks','Parameterized networks of units that transform inputs into outputs.'],
+ ['transformer','Transformers','Neural architectures built around attention and feed-forward processing.','Transformers are used beyond language, including vision, audio, and control.'],
+ ['attention','Attention','Weight and combine information according to relationships between queries, keys, and values.'],
+ ['cnn','Convolutional networks','Use shared local filters to capture structure in grids such as images.'],
+ ['rnn','Recurrent networks','Process sequential inputs with a recurrent hidden state; includes LSTM and GRU.'],
+ ['gnn','Graph neural networks','Compute representations from graph structure and node or edge features.'],
+ ['classical','Classical ML models','Families including linear models, decision trees, kernels, and nearest-neighbor methods.']]],
+['generation','Representations & generation','#df9dbd',2,1,[
+ ['generative','Generative modeling','Model data distributions to generate or explain observations.','Generative AI spans several model families and is not limited to LLMs.'],
+ ['llm','Large language models','Large-scale models that learn patterns in language and support language tasks.','Many modern LLMs use transformers; scale and language focus do not define an agent.'],
+ ['foundation','Foundation models','Broadly pretrained models designed for adaptation to many downstream tasks.','This is a role and training regime, not a single architecture or modality.'],
+ ['embeddings','Embeddings','Vector representations encoding useful properties of tokens, images, entities, or other inputs.'],
+ ['diffusion','Diffusion models','Generate through a learned process that reverses progressive corruption of data.'],
+ ['gan','GANs','Train a generator and discriminator through an adversarial objective.'],
+ ['vae','Variational autoencoders','Latent-variable generative models learned with a variational objective.'],
+ ['autoregressive','Autoregressive models','Factor a sequence distribution into conditional predictions of successive elements.'],
+ ['flows','Normalizing flows','Transform a simple distribution through invertible mappings with tractable likelihoods.'],
+ ['energybased','Energy-based models','Assign low energy to compatible configurations and higher energy to incompatible ones.']]],
+['applications','Tasks & modalities','#91c8ad',3,1,[
+ ['nlp','Language / NLP','Analyze and generate language: classification, translation, extraction, and more.'],
+ ['vision','Computer vision','Interpret visual inputs, including recognition, detection, and segmentation.'],
+ ['audio','Speech & audio','Recognize, understand, and generate speech and other sound.'],
+ ['multimodal','Multimodal AI','Combine information from more than one modality, such as text, images, and audio.'],
+ ['robotics','Robotics','Integrate sensing, state estimation, planning, and control in physical systems.'],
+ ['recommend','Recommendation','Rank and select items or actions relevant to a user or context.'],
+ ['forecast','Forecasting','Predict future values from past observations and other information.'],
+ ['science','AI for science','Use AI for scientific prediction, discovery, simulation, and design.'],
+ ['timeseries','Time-series modeling','Represent, forecast, classify, or detect changes in temporally ordered observations.'],
+ ['tabular','Tabular learning','Learn from structured rows and columns containing heterogeneous feature types.']]],
+['uncertainty','Uncertainty & causality','#91b4d8',0,2,[
+ ['probai','Probabilistic AI','Represent uncertain quantities and reason with probability distributions.'],
+ ['bayes','Bayesian inference','Update beliefs using evidence through a probabilistic model.'],
+ ['graphical','Graphical models','Represent dependency structure among random variables with graphs.'],
+ ['causal','Causal inference','Estimate effects of interventions under explicit causal assumptions.','Predictive correlation alone does not identify causal effects.'],
+ ['latent','Latent-variable models','Use unobserved variables to explain observed data.'],
+ ['sampling','Sampling & inference','Approximate expectations or distributions using methods such as Monte Carlo and MCMC.']]],
+['decisions','Decisions & interaction','#d5c786',1,2,[
+ ['rl','Reinforcement learning','Learn policies from interaction or recorded experience using reward signals.','RL is a learning paradigm; it does not require deep neural networks.'],
+ ['mdp','Markov decision processes','Model sequential decisions with states, actions, transitions, and rewards.'],
+ ['policy','Policies & value functions','Policies choose actions; value functions estimate expected future returns.'],
+ ['deeprl','Deep reinforcement learning','Use deep networks to represent policies, values, or models in RL.'],
+ ['world','World models','Predict aspects of environment dynamics to support reasoning or planning.'],
+ ['multiagent','Multi-agent systems','Study multiple interacting agents, including cooperation and competition.'],
+ ['evolution','Evolutionary methods','Search over candidate solutions using variation and selection.'],
+ ['control','Control theory','Design feedback policies to regulate dynamical systems.'],
+ ['pomdp','Partially observable decision processes','Extend sequential decision models when the underlying state cannot be observed directly.'],
+ ['gametheory','Game theory','Analyze strategic interaction among decision-makers with potentially competing objectives.']]],
+['engineering','Data & engineering','#a0c4b6',2,2,[
+ ['data','Data engineering','Collect, clean, label, version, and organize data for training and evaluation.'],
+ ['evaluation','Evaluation','Measure model or system performance with suitable tasks, metrics, and test data.'],
+ ['generalization','Generalization','How well learned behavior transfers beyond training examples.'],
+ ['regularization','Regularization','Constrain or bias learning to improve generalization and reduce overfitting.'],
+ ['inference','Model inference','Run a trained model to produce outputs for new inputs.','Model inference means execution; statistical inference means drawing conclusions from data.'],
+ ['compression','Model compression','Reduce model cost through quantization, pruning, or distillation.'],
+ ['mlops','MLOps & deployment','Version, deploy, serve, observe, and maintain ML systems.'],
+ ['monitoring','Monitoring & drift','Track production performance and changes in data or behavior.']]],
+['trust','Understanding & trust','#c6a5ae',3,2,[
+ ['interpret','Interpretability','Investigate model behavior, learned representations, and internal mechanisms.'],
+ ['alignment','Alignment','Seek model or system behavior consistent with intended goals and constraints.'],
+ ['safety','Safety & robustness','Evaluate and reduce harmful or unreliable behavior under real-world conditions.'],
+ ['security','AI security','Protect models, data, and applications from adversarial manipulation.'],
+ ['privacy','Privacy','Limit the exposure or misuse of information about individuals or sensitive records.'],
+ ['fairness','Fairness & governance','Examine impacts across groups and define accountability, policy, and oversight.']]],
+['predictive','Classical predictive models','#b9c998',0,3,[
+ ['linearreg','Linear regression','Predict continuous targets with a weighted linear combination of features.'],
+ ['logistic','Logistic regression','Model class probabilities with a linear decision function and a logistic link.'],
+ ['svm','Support vector machines','Learn maximum-margin decision boundaries; kernels can represent nonlinear boundaries.'],
+ ['knn','Nearest neighbors','Predict from the labels or values of nearby examples under a chosen distance.'],
+ ['trees','Decision trees','Partition feature space through a hierarchy of decision rules.'],
+ ['forest','Random forests','Average randomized decision trees to reduce variance and improve robustness.'],
+ ['boosting','Gradient boosting','Build an additive ensemble by repeatedly fitting models to improve current errors.'],
+ ['gp','Gaussian processes','Bayesian distributions over functions that provide predictions with uncertainty.','Gaussian processes are kernel methods and probabilistic models; they are distinct from Gaussian mixture models.'],
+ ['naivebayes','Naive Bayes','Apply Bayes rule with a conditional-independence assumption between features.'],
+ ['kernels','Kernel methods','Represent similarity implicitly in a feature space; used by SVMs and Gaussian processes.']]],
+['unsupmethods','Structure & representation','#96c8bd',1,3,[
+ ['clustering','Clustering','Group observations by similarity without target labels.'],
+ ['kmeans','k-means','Partition observations around learned cluster centroids.'],
+ ['gmm','Gaussian mixtures','Represent a distribution as a weighted mixture of Gaussian components.'],
+ ['dbscan','Density-based clustering','Find dense regions and mark sparse observations as noise.'],
+ ['pca','PCA','Project data onto directions that explain the greatest variance.'],
+ ['manifold','t-SNE & UMAP','Construct lower-dimensional views that preserve selected neighborhood structure.','Primarily visualization methods; apparent clusters should be interpreted carefully.'],
+ ['matrixfactor','Matrix factorization','Decompose a matrix into lower-dimensional factors for representation or recommendation.'],
+ ['anomaly','Anomaly detection','Identify observations that differ substantially from expected patterns.']]],
+['probmethods','Probabilistic & sequential models','#8eb7da',2,3,[
+ ['bayesnet','Bayesian networks','Directed graphical models encoding conditional dependencies among random variables.'],
+ ['markov','Markov chains','Model transitions where the next state depends on a limited representation of the current state.'],
+ ['hmm','Hidden Markov models','Sequence models with latent states that generate observed data.'],
+ ['kalman','Kalman filters','Estimate the state of linear Gaussian dynamical systems recursively.'],
+ ['particle','Particle filters','Approximate sequential belief distributions with weighted samples.'],
+ ['mcmc','MCMC','Approximate distributions by constructing a Markov chain whose samples follow the target distribution.'],
+ ['variational','Variational inference','Approximate an intractable distribution by optimizing a tractable family.'],
+ ['belief','Belief-state estimation','Maintain a distribution over hidden states when observations are incomplete or noisy.']]],
+['deepmethods','Deep architectures & mechanisms','#b5a2e0',3,3,[
+ ['mlp','Multilayer perceptrons','Feed-forward neural networks built from stacked learned transformations.'],
+ ['residual','Residual networks','Use skip connections to make deep transformations easier to optimize.'],
+ ['autoencoder','Autoencoders','Learn representations by reconstructing inputs through a constrained latent representation.'],
+ ['seq2seq','Sequence-to-sequence','Map an input sequence to an output sequence, often with encoder-decoder architectures.'],
+ ['encoderdecoder','Encoder-decoder models','Encode an input representation and decode it into a target representation or sequence.'],
+ ['moe','Mixture of Experts','Route inputs through selected specialized subnetworks to increase conditional capacity.'],
+ ['normalization','Normalization layers','Stabilize optimization by normalizing activations or features within a network.'],
+ ['positional','Positional representations','Supply order or spatial position information to architectures without inherent sequence order.']]],
+['rlmethods','Reinforcement learning methods','#d9c66f',0,4,[
+ ['modelfree','Model-free RL','Learn values or policies without using an explicit environment model for planning.'],
+ ['modelbased','Model-based RL','Use a known or learned environment model for planning, imagined experience, or policy improvement.'],
+ ['valuebased','Value-based methods','Learn values of states or actions and derive behavior from them.'],
+ ['policygradient','Policy-gradient methods','Optimize a parameterized policy using estimates of the gradient of expected return.'],
+ ['actorcritic','Actor-critic','Combine a policy-producing actor with a value-estimating critic.'],
+ ['dqn','DQN / Q-learning','Learn action values from Bellman targets; DQN uses deep networks for high-dimensional inputs.'],
+ ['ppo','PPO','An on-policy actor-critic method that limits policy-update size with a clipped objective.'],
+ ['sac','Soft Actor-Critic','An off-policy actor-critic method that balances return with policy entropy.'],
+ ['onpolicy','On-policy learning','Update a policy primarily from experience generated by that current policy.'],
+ ['offpolicy','Off-policy learning','Learn from experience generated by another policy or an earlier behavior policy.']]],
+['robotlearning','Learning from interaction & demonstration','#82d1c5',1,4,[
+ ['online','Online RL','Collect new environment interactions while learning.'],
+ ['offline','Offline RL','Learn a reward-seeking policy from a fixed experience dataset.'],
+ ['imitation','Imitation learning','Learn behavior from demonstrations or expert feedback.'],
+ ['bc','Behavior cloning','Train a policy to reproduce demonstrated actions with supervised learning.'],
+ ['visuomotor','Visuomotor policies','Map visual observations and robot state to actions.'],
+ ['vlm','Vision-language models','Connect visual observations with language for understanding and grounding.'],
+ ['vla','Vision-language-action models','Condition robot actions on vision, language instructions, and often proprioceptive state.'],
+ ['diffpolicy','Diffusion policies','Generate action sequences through a conditional denoising process.'],
+ ['wam','World-action models','Jointly predict actions and aspects of resulting future observations or states.','An emerging design family rather than a single settled architecture.'],
+ ['actionchunks','Action chunking','Predict multiple future actions together and replan after executing part of the sequence.']]],
+['optimizationmethods','Optimization & evolutionary search','#d5ae8d',2,4,[
+ ['sgd','SGD','Update parameters using noisy gradient estimates from minibatches.'],
+ ['adam','Adam','Adapt gradient updates using running estimates of first and second moments.'],
+ ['convex','Convex optimization','Optimize objectives with structure that supports global guarantees.'],
+ ['bayesopt','Bayesian optimization','Select evaluations of an expensive objective using a probabilistic surrogate and acquisition rule.'],
+ ['genetic','Genetic algorithms','Search populations using selection, mutation, and crossover.'],
+ ['es','Evolution strategies','Optimize through sampled parameter perturbations and population-level updates.'],
+ ['cmaes','CMA-ES','Adapt a Gaussian search distribution for derivative-free continuous optimization.'],
+ ['qualitydiversity','Quality-diversity','Search for a diverse collection of high-performing solutions rather than one optimum.']]],
+['llmmethods','Language & foundation model methods','#dfa1bf',3,4,[
+ ['tokenization','Tokenization','Convert raw inputs into discrete or continuous units processed by a model.'],
+ ['maskedlm','Masked modeling','Learn representations by predicting intentionally hidden parts of an input.'],
+ ['nexttoken','Next-token prediction','Train a model to predict each next token from preceding context.'],
+ ['prompting','Prompting','Condition model behavior through instructions, examples, or structured context at inference time.'],
+ ['incontext','In-context learning','Perform or adapt to a task from examples and instructions supplied in the context.'],
+ ['instruction','Instruction tuning','Fine-tune models on instruction-response examples to improve task following.'],
+ ['toolcalling','Tool calling','Generate structured requests to external functions, APIs, or software.'],
+ ['longcontext','Long-context methods','Extend or manage the amount of information a sequence model can use at once.']]]
+];
+// Edges are statements: source — relationship → target. No implicit inheritance.
+const EDGE_TEXT=`
+math|underpins|linear
+math|underpins|calculus
+math|underpins|probability
+math|underpins|optimization
+probability|supports|information
+algorithms|enables computation in|ai
+ai|includes|ml
+ai|includes|symbolic
+ai|includes|probai
+ai|includes|planning
+ai|includes|multiagent
+ai|includes|evolution
+ai|is applied in|robotics
+ml|includes|supervised
+ml|includes|unsupervised
+ml|includes|semisupervised
+ml|includes|rl
+ml|includes|deep
+ml|uses|classical
+ml|can use|active
+ml|can reuse knowledge through|transfer
+unsupervised|includes|selfsupervised
+supervised|uses labels from|data
+semisupervised|combines labeled and unlabeled|data
+active|selects examples for labeling in|data
+transfer|can use|finetune
+classical|can be trained with|supervised
+classical|can be trained with|unsupervised
+classical|can support|forecast
+classical|can support|recommend
+symbolic|uses|logic
+symbolic|uses|search
+symbolic|uses|constraints
+symbolic|includes|expert
+expert|uses|logic
+planning|often uses|search
+planning|can use|constraints
+kg|can support|logic
+neurosymbolic|combines with learned models|symbolic
+neurosymbolic|can use|nn
+probai|uses|bayes
+probai|uses|graphical
+probai|uses|sampling
+graphical|can encode|latent
+bayes|uses|probability
+bayes|can be approximated with|sampling
+causal|can use|graphical
+causal|helps assess interventions in|science
+causal|can inform|fairness
+deep|uses multilayer|nn
+nn|includes architecture family|transformer
+nn|includes architecture family|cnn
+nn|includes architecture family|rnn
+nn|includes architecture family|gnn
+transformer|uses|attention
+transformer|can process|vision
+transformer|can process|audio
+transformer|can support|multimodal
+transformer|can implement|world
+cnn|often supports|vision
+rnn|can support|forecast
+rnn|can support|nlp
+gnn|can learn from|kg
+gnn|can support|science
+nn|can learn|embeddings
+embeddings|use vector spaces from|linear
+deep|can use|supervised
+deep|can use|selfsupervised
+deep|can be combined with|rl
+nn|is often trained using|backprop
+backprop|applies chain rule from|calculus
+backprop|supplies gradients for|gradient
+gradient|is a form of|optimization
+gradient|updates parameters during|pretrain
+gradient|updates parameters during|finetune
+regularization|aims to improve|generalization
+evaluation|estimates|generalization
+ml|requires attention to|generalization
+pretrain|often uses|selfsupervised
+pretrain|learns from|data
+pretrain|can produce|foundation
+foundation|can be adapted with|finetune
+finetune|includes|sft
+finetune|can use|lora
+sft|uses|supervised
+llm|can be post-trained with|rlhf
+llm|can be post-trained with|dpo
+rlhf|uses|rl
+rlhf|aims to improve|alignment
+dpo|aims to improve|alignment
+generative|includes|diffusion
+generative|includes|gan
+generative|includes|vae
+generative|includes|autoregressive
+vae|is a family of|latent
+vae|uses approximate posterior inference from|probai
+diffusion|often uses|nn
+diffusion|can use|transformer
+gan|uses competing|nn
+autoregressive|can be implemented with|rnn
+llm|often uses|transformer
+llm|often uses|autoregressive
+llm|can serve as|foundation
+llm|supports|nlp
+foundation|can support|vision
+foundation|can support|audio
+foundation|can be|multimodal
+autoregressive|often generates using|sampling
+generative|can generate content for|audio
+generative|can generate visual content for|vision
+information|provides common loss functions for|generative
+nlp|can use|embeddings
+recommend|can use|embeddings
+retrieval|can use|embeddings
+vector|indexes|embeddings
+retrieval|can use|vector
+rag|combines generation with|retrieval
+rag|often uses|llm
+rag|can retrieve from|kg
+agents|can use|llm
+agents|can use|planning
+agents|can use|tools
+agents|can use|memory
+agents|can use|rag
+agents|can be coordinated by|orchestration
+agents|can act through|robotics
+orchestration|coordinates|tools
+multiagent|studies interacting|agents
+rl|often formalizes tasks with|mdp
+rl|learns|policy
+rl|includes|deeprl
+deeprl|uses|deep
+mdp|defines transitions and rewards for|policy
+world|can support|planning
+world|can support model-based|rl
+rl|can be used for|control
+control|supports|robotics
+robotics|often uses|vision
+robotics|uses|planning
+robotics|can use|rl
+multiagent|can use|rl
+evolution|is a family of|optimization
+optimization|supports|control
+probai|can support state estimation in|robotics
+data|feeds|pretrain
+data|feeds|evaluation
+evaluation|measures behavior of|agents
+evaluation|measures behavior of|llm
+inference|runs trained|nn
+compression|can reduce cost of|inference
+mlops|operationalizes|inference
+mlops|includes|monitoring
+monitoring|can trigger new|evaluation
+mlops|manages|data
+interpret|investigates|nn
+interpret|can inform|safety
+safety|requires|evaluation
+security|protects|agents
+security|protects|data
+privacy|constrains use of|data
+fairness|informs|evaluation
+alignment|is assessed through|evaluation
+tools|introduces attack surfaces studied by|security
+rag|introduces attack surfaces studied by|security
+multimodal|can integrate|nlp
+multimodal|can integrate|vision
+multimodal|can integrate|audio
+science|can use|generative
+forecast|can use|probai
+symbolic|uses|ontology
+ontology|organizes concepts in|kg
+ontology|can support|logic
+selfsupervised|can use|contrastive
+contrastive|learns|embeddings
+federated|is a distributed setting for|ml
+federated|is constrained by|privacy
+distillation|is a form of|compression
+distillation|can transfer behavior from|foundation
+quantization|is a form of|compression
+quantization|accelerates|inference
+generative|includes|flows
+generative|includes|energybased
+flows|uses invertible|nn
+energybased|can be implemented with|nn
+forecast|is a task within|timeseries
+timeseries|can use|rnn
+timeseries|can use|transformer
+timeseries|can use|hmm
+tabular|often uses|classical
+tabular|often uses|trees
+tabular|often uses|boosting
+mdp|can be extended to|pomdp
+pomdp|requires maintaining|belief
+multiagent|draws on|gametheory
+gametheory|can inform|policy
+classical|includes|linearreg
+classical|includes|logistic
+classical|includes|svm
+classical|includes|knn
+classical|includes|trees
+classical|includes|gp
+supervised|can train|linearreg
+supervised|can train|logistic
+supervised|can train|svm
+supervised|can train|knn
+supervised|can train|trees
+trees|form ensembles in|forest
+trees|form weak learners in|boosting
+forest|is an ensemble method for|supervised
+boosting|is an ensemble method for|supervised
+svm|can use|kernels
+gp|uses|kernels
+gp|is a Bayesian model within|probai
+gp|can support|forecast
+naivebayes|uses|bayes
+naivebayes|is a model for|supervised
+unsupervised|includes|clustering
+clustering|includes|kmeans
+clustering|includes|gmm
+clustering|includes|dbscan
+unsupervised|includes dimensionality reduction with|pca
+unsupervised|includes visualization methods such as|manifold
+unsupervised|can learn factors with|matrixfactor
+unsupervised|can support|anomaly
+matrixfactor|can support|recommend
+gmm|is a|latent
+gmm|uses|probability
+graphical|includes directed models such as|bayesnet
+graphical|can represent|markov
+markov|underlies|hmm
+hmm|is a latent sequence model within|graphical
+hmm|can be used for|timeseries
+kalman|performs sequential|belief
+particle|performs sequential|belief
+particle|uses|sampling
+mcmc|is a method of|sampling
+variational|is an approximate method for|bayes
+vae|uses|variational
+probai|uses|belief
+nn|includes|mlp
+nn|can use|residual
+autoencoder|is trained with|unsupervised
+autoencoder|learns|embeddings
+seq2seq|often uses|encoderdecoder
+transformer|can use|encoderdecoder
+transformer|can scale through|moe
+nn|often uses|normalization
+transformer|uses|positional
+cnn|can use|residual
+rl|includes|modelfree
+rl|includes|modelbased
+modelfree|includes|valuebased
+modelfree|includes|policygradient
+actorcritic|combines policy and value learning within|modelfree
+dqn|is a deep form of|valuebased
+dqn|uses|offpolicy
+ppo|is a form of|actorcritic
+ppo|uses|onpolicy
+sac|is a form of|actorcritic
+sac|uses|offpolicy
+policygradient|learns|policy
+valuebased|learns|policy
+modelbased|uses|world
+modelbased|can use|planning
+deeprl|can be|modelfree
+deeprl|can be|modelbased
+online|is a data setting for|rl
+offline|is a data setting for|rl
+offline|usually relies on|offpolicy
+imitation|includes|bc
+bc|uses|supervised
+bc|learns|policy
+imitation|can train|visuomotor
+visuomotor|uses|vision
+visuomotor|produces|policy
+vlm|is a kind of|multimodal
+vlm|combines|vision
+vlm|combines|nlp
+vla|can build on|vlm
+vla|produces robot|policy
+vla|can be trained with|imitation
+diffpolicy|is a kind of|visuomotor
+diffpolicy|uses|diffusion
+diffpolicy|can predict|actionchunks
+vla|can predict|actionchunks
+wam|combines predictive modeling from|world
+wam|generates|policy
+wam|can overlap with|vla
+robotics|can use|visuomotor
+robotics|can use|vla
+gradient|includes optimizers such as|sgd
+gradient|includes optimizers such as|adam
+convex|is a family within|optimization
+bayesopt|is a method of|optimization
+bayesopt|often uses|gp
+evolution|includes|genetic
+evolution|includes|es
+es|includes|cmaes
+evolution|can support|qualitydiversity
+qualitydiversity|can discover diverse|policy
+sgd|updates parameters during|backprop
+adam|updates parameters during|backprop
+llm|requires|tokenization
+selfsupervised|includes|maskedlm
+selfsupervised|includes|nexttoken
+maskedlm|can train|transformer
+nexttoken|can train|autoregressive
+prompting|conditions|llm
+incontext|is a capability of|llm
+instruction|is a form of|sft
+instruction|improves task following in|llm
+toolcalling|connects models to|tools
+llm|can produce|toolcalling
+longcontext|extends usable context in|transformer
+rag|can extend available context for|llm
+`;
+const ROUTES=[
+ {id:'language',title:'From learning to language',sub:'ML → deep learning → transformers → LLMs',nodes:['ai','ml','deep','nn','transformer','llm','nlp']},
+ {id:'agent',title:'From a model to a system',sub:'LLMs, retrieval, tools, memory, and agents',nodes:['llm','rag','retrieval','embeddings','vector','agents','tools','memory','planning']},
+ {id:'acting',title:'From learning to action',sub:'Rewards, policies, world models, and robots',nodes:['ml','rl','mdp','policy','deeprl','deep','world','planning','robotics','control']},
+ {id:'beyond',title:'Beyond neural networks',sub:'Symbols, uncertainty, search, and constraints',nodes:['ai','symbolic','logic','search','planning','constraints','expert','probai','bayes','graphical','causal']},
+ {id:'classical',title:'The classical ML toolbox',sub:'From supervised learning to ensembles and kernels',nodes:['ml','classical','supervised','linearreg','logistic','svm','kernels','trees','forest','boosting','gp']},
+ {id:'structure',title:'Finding structure without labels',sub:'Clustering, latent factors, and representation learning',nodes:['unsupervised','clustering','kmeans','gmm','pca','manifold','matrixfactor','autoencoder','embeddings']},
+ {id:'probability',title:'Reasoning under uncertainty',sub:'Graphical models, sequences, and approximate inference',nodes:['probai','bayes','graphical','bayesnet','markov','hmm','belief','kalman','particle','sampling','mcmc','variational']},
+ {id:'rlfamily',title:'The reinforcement learning families',sub:'Value learning, policy optimization, and environment models',nodes:['rl','deeprl','modelfree','valuebased','dqn','policygradient','actorcritic','ppo','sac','modelbased','world','planning']},
+ {id:'embodied',title:'From perception to robot action',sub:'Vision-language models, learned policies, and predictive models',nodes:['vision','vlm','vla','visuomotor','imitation','bc','diffpolicy','diffusion','actionchunks','world','wam','policy','robotics']},
+ {id:'llmlifecycle',title:'The language-model lifecycle',sub:'Pretraining, adaptation, inference context, and tools',nodes:['transformer','tokenization','selfsupervised','maskedlm','nexttoken','autoregressive','llm','foundation','finetune','sft','instruction','rlhf','dpo','prompting','incontext','toolcalling','tools']},
+ {id:'optimization',title:'Ways to optimize',sub:'Gradients, probabilistic search, and evolution',nodes:['optimization','gradient','sgd','adam','convex','bayesopt','gp','evolution','genetic','es','cmaes','qualitydiversity']}
+];
+// UI and graph rendering follow below.
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+const nodes=[],groups=[],byId=new Map();
+GROUPS.forEach(([id,label,color,col,row,entries])=>{
+ const group={id,label,color,x:col*450,y:row*450,w:410,h:410,ids:[]};groups.push(group);
+ entries.forEach(([id,label,description,note],i)=>{
+  const n={id,label,description,note,group,hub:i===0,x:group.x+105+(i%2)*200,y:group.y+87+Math.floor(i/2)*69};
+  group.ids.push(id);nodes.push(n);byId.set(id,n);
+ });
+});
+const edges=EDGE_TEXT.trim().split('\n').map((line,i)=>{const [source,label,target]=line.split('|');if(!byId.has(source)||!byId.has(target))throw Error('Unknown endpoint: '+line);return {id:'edge-'+i,source,label,target,cross:byId.get(source).group!==byId.get(target).group}});
+const adjacency=new Map(nodes.map(n=>[n.id,[]]));edges.forEach(e=>{adjacency.get(e.source).push(e);adjacency.get(e.target).push(e)});
+let selected=null,mode='full',route=null,region=null,scale=1,tx=0,ty=0,positions=new Map(),visible=[],visibleEdges=[],drag=null,moved=false;
+const homePositions=new Map(nodes.map(n=>[n.id,{x:n.x,y:n.y}]));
+function el(tag,cls,text){const item=document.createElement(tag);if(cls)item.className=cls;if(text!==undefined)item.textContent=text;return item}
+function svg(tag,attrs={}){const item=document.createElementNS(NS,tag);for(const [key,value] of Object.entries(attrs))item.setAttribute(key,value);return item}
+function neighbors(id){return new Set([id,...adjacency.get(id).map(e=>e.source===id?e.target:e.source)])}
+function displayIds(){if(route)return new Set(route.nodes);if(mode==='local'&&selected)return neighbors(selected);return new Set(nodes.map(n=>n.id))}
+function selectNode(id,{focus=false}={}){
+ if(!byId.has(id))return;selected=id;region=null;
+ // A route remains visible when selecting one of its nodes; following an external relationship exits it.
+ if(route&&!route.nodes.includes(id))route=null;
+ render();if(focus||mode==='local')fit();
+ history.replaceState(null,'','#'+id);
+ if(matchMedia('(max-width:650px)').matches){$('app').classList.add('sidebar-open');$('menu').setAttribute('aria-expanded','true')}
+ $('selection').scrollIntoView({block:'nearest',behavior:'auto'});
+}
+function reset(){selected=null;region=null;route=null;mode='full';nodes.forEach(n=>homePositions.set(n.id,{x:n.x,y:n.y}));history.replaceState(null,'',location.pathname+location.search);$('search').value='';renderSearch();render();fit()}
+function renderSidebar(){
+ $('groups').replaceChildren();groups.forEach(g=>{const b=el('button','group-button');b.style.setProperty('--c',g.color);b.append(el('span','swatch'),document.createTextNode(g.label),el('small','',g.ids.length));b.onclick=()=>{region=g.id;selected=null;route=null;mode='full';render();fit(g.ids)};$('groups').append(b)});
+ $('routes').replaceChildren();ROUTES.forEach(r=>{const b=el('button','route',r.title);b.append(el('span','',r.sub));b.setAttribute('aria-pressed',route===r);b.onclick=()=>{route=r;selected=null;region=null;mode='full';render();fit();closeMobile()};$('routes').append(b)});
+ const panel=$('selection');panel.replaceChildren();
+ if(selected){
+  const n=byId.get(selected);panel.append(el('div','eyebrow',n.group.label),el('h2','',n.label),el('p','',n.description));if(n.note)panel.append(el('p','note',n.note));
+  const b=el('button','primary',mode==='local'?'Show in full network ↗':'Isolate its connections ↗');b.onclick=()=>{mode=mode==='local'?'full':'local';route=null;region=null;render();fit();closeMobile()};panel.append(b);
+  panel.append(el('div','section-title',adjacency.get(selected).length+' direct connections'));
+  adjacency.get(selected).forEach(e=>{const other=e.source===selected?e.target:e.source;const b=el('button','relation');b.append(el('strong','',byId.get(e.source).label+' '),el('em','',e.label+' → '),el('strong','',byId.get(e.target).label));b.setAttribute('aria-label',byId.get(e.source).label+' '+e.label+' '+byId.get(e.target).label+'. Explore '+byId.get(other).label);b.onclick=()=>selectNode(other,{focus:mode==='local'});panel.append(b)});
+ }else if(route){panel.append(el('div','eyebrow','Guided connection trail'),el('h2','',route.title),el('p','',route.sub),el('p','note','Follow the arrow labels. This is a network of relationships, not a sequence of required prerequisites.'));route.nodes.forEach(id=>{const b=el('button','result',byId.get(id).label);b.onclick=()=>selectNode(id);panel.append(b)})}
+ else if(region){const g=groups.find(g=>g.id===region);panel.append(el('div','eyebrow','Explore this region'),el('h2','',g.label));g.ids.forEach(id=>{const b=el('button','result',byId.get(id).label);b.onclick=()=>selectNode(id);panel.append(b)})}
+ else{panel.append(el('div','eyebrow','Read the connections'),el('h2','','Many axes. One field.'),el('p','','A model can be a transformer, trained with self-supervision, applied to vision, and deployed inside an agent. Those are different descriptions of the same system.'),el('p','note','Start with a region or a guided trail. Select any concept to read every incoming and outgoing relationship.'))}
+}
+function renderSearch(){const query=$('search').value.trim().toLowerCase();$('results').replaceChildren();$('explorer').hidden=!!query;if(!query)return;const matches=nodes.filter(n=>(n.label+' '+n.description+' '+n.id).toLowerCase().includes(query));$('results').append(el('div','section-title',matches.length+' matching concepts'));matches.forEach(n=>{const b=el('button','result',n.label);b.append(el('small','',n.group.label));b.onclick=()=>{mode='local';route=null;selectNode(n.id,{focus:true});closeMobile()};$('results').append(b)});if(!matches.length)$('results').append(el('p','no-result','No matches. Try “transformer”, “reward”, or “symbolic”.'))}
+function layout(){
+ const ids=displayIds();visible=nodes.filter(n=>ids.has(n.id));visibleEdges=edges.filter(e=>ids.has(e.source)&&ids.has(e.target));positions=new Map();
+ if(route){route.nodes.forEach((id,i)=>positions.set(id,{x:130+(i%3)*320,y:100+Math.floor(i/3)*150}))}
+ else if(mode==='local'&&selected){const other=visible.filter(n=>n.id!==selected),half=Math.ceil(other.length/2),height=Math.max(360,half*80);positions.set(selected,{x:460,y:height/2});other.forEach((n,i)=>{const left=i<half,ix=left?i:i-half,count=left?half:other.length-half;positions.set(n.id,{x:left?130:790,y:height/2+(ix-(count-1)/2)*80})})}
+ else visible.forEach(n=>positions.set(n.id,{...homePositions.get(n.id)}));
+}
+function render(){
+ layout();renderSidebar();$('regions').replaceChildren();$('nodes').replaceChildren();
+ if(mode==='full'&&!route)groups.forEach(g=>{const box=el('div','region');box.style.cssText=`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px;--c:${g.color}`;box.append(el('div','region-title',g.label));$('regions').append(box)});
+ const related=selected?neighbors(selected):null;
+ visible.forEach(n=>{const p=positions.get(n.id),b=el('button','node'+(n.hub?' hub':'')+(selected===n.id?' selected':'')+(related&&!related.has(n.id)?' faint':'')+(related&&related.has(n.id)&&n.id!==selected?' neighbor':''));b.style.cssText=`left:${p.x}px;top:${p.y}px;--c:${n.group.color}`;b.dataset.id=n.id;b.append(el('span','dot'),el('span','',n.label));b.setAttribute('aria-label',n.label+'. '+adjacency.get(n.id).length+' connections');b.setAttribute('aria-pressed',selected===n.id);b.onclick=e=>{if(e.detail===0||!moved)selectNode(n.id)};$('nodes').append(b)});
+ drawEdges();$('full').setAttribute('aria-pressed',mode==='full');$('local').setAttribute('aria-pressed',mode==='local');
+ $('view-title').textContent=route?route.title:mode==='local'?byId.get(selected).label+' & its connections':region?groups.find(g=>g.id===region).label:'The whole field, woven together.';
+ $('view-subtitle').textContent=selected?'Highlighted arrows show relationships with '+byId.get(selected).label+'.':route?'A guided slice of the field. Every arrow is a statement.':'Select a concept to illuminate its connections.';
+ $('status').textContent=visible.length+' concepts / '+visibleEdges.length+' relationships'+(mode==='local'?' / local view':'');
+}
+function geometry(e){const a=positions.get(e.source),b=positions.get(e.target);const dx=b.x-a.x,dy=b.y-a.y;
+ // Intersect the center-to-center vector with each card boundary.
+ const sourceScale=Math.min(88/Math.max(Math.abs(dx),.01),31/Math.max(Math.abs(dy),.01));
+ const targetScale=Math.min(90/Math.max(Math.abs(dx),.01),33/Math.max(Math.abs(dy),.01));
+ const sx=a.x+dx*sourceScale,sy=a.y+dy*sourceScale,ex=b.x-dx*targetScale,ey=b.y-dy*targetScale;
+ const bend=Math.min(65,Math.hypot(dx,dy)*.08)*(e.id.split('-')[1]%2?1:-1),length=Math.max(1,Math.hypot(dx,dy));
+ const cx=(sx+ex)/2-dy/length*bend,cy=(sy+ey)/2+dx/length*bend;
+ return {d:`M${sx},${sy} Q${cx},${cy} ${ex},${ey}`,x:(sx+2*cx+ex)/4,y:(sy+2*cy+ey)/4-7};
+}
+function drawEdges(){
+ const wires=$('wires');wires.replaceChildren();const defs=svg('defs');
+ for(const [id,color] of [['arrow','#77939e'],['arrow-hot','#b4e5d0']]){const marker=svg('marker',{id,viewBox:'0 0 8 8',refX:7,refY:4,markerWidth:6,markerHeight:6,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});marker.append(svg('path',{d:'M0 0 L8 4 L0 8 z',fill:color}));defs.append(marker)}wires.append(defs);
+ const sorted=[...visibleEdges].sort((a,b)=>Number(a.source===selected||a.target===selected)-Number(b.source===selected||b.target===selected));
+ sorted.forEach(e=>{const hot=e.source===selected||e.target===selected||!!route,geo=geometry(e);const path=svg('path',{d:geo.d,class:'wire'+(e.cross?' cross':'')+(hot?' hot':selected?' faint':''),'marker-end':`url(#${hot?'arrow-hot':'arrow'})`});const title=svg('title');title.textContent=byId.get(e.source).label+' '+e.label+' '+byId.get(e.target).label;path.append(title);wires.append(path);
+ if(hot){const label=svg('text',{x:geo.x,y:geo.y,class:'edge-label'});label.textContent=e.label;wires.append(label)}});
+}
+function bounds(ids=visible.map(n=>n.id)){const points=ids.map(id=>positions.get(id)).filter(Boolean);if(!points.length)return {x:0,y:0,w:1,h:1};const xs=points.map(p=>p.x),ys=points.map(p=>p.y);return {x:Math.min(...xs)-115,y:Math.min(...ys)-70,w:Math.max(...xs)-Math.min(...xs)+230,h:Math.max(...ys)-Math.min(...ys)+140}}
+function fit(ids){const b=bounds(ids),r=$('map').getBoundingClientRect();scale=Math.max(.15,Math.min((r.width-45)/b.w,(r.height-70)/b.h,1.45));tx=(r.width-b.w*scale)/2-b.x*scale;ty=(r.height-b.h*scale)/2-b.y*scale;transform()}
+function transform(){$('world').style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;$('zoom').textContent=Math.round(scale*100)+'%'}
+function zoom(factor,x=$('map').clientWidth/2,y=$('map').clientHeight/2){const next=Math.min(3,Math.max(.15,scale*factor));tx=x-(x-tx)*next/scale;ty=y-(y-ty)*next/scale;scale=next;transform()}
+function closeMobile(){$('app').classList.remove('sidebar-open');$('menu').setAttribute('aria-expanded','false')}
+$('search').addEventListener('input',renderSearch);$('search').addEventListener('keydown',e=>{if(e.key==='Enter'){const first=$('results').querySelector('button');if(first)first.click()}});
+$('reset').onclick=reset;$('clear').onclick=()=>{selected=null;region=null;route=null;mode='full';render();fit();history.replaceState(null,'',location.pathname+location.search)};
+$('full').onclick=()=>{mode='full';route=null;render();fit()};$('local').onclick=()=>{mode='local';selected=selected||'ml';route=null;region=null;render();fit()};
+$('fit').onclick=()=>fit(region?groups.find(g=>g.id===region).ids:undefined);$('plus').onclick=()=>zoom(1.25);$('minus').onclick=()=>zoom(.8);
+$('menu').onclick=()=>{const open=$('app').classList.toggle('sidebar-open');$('menu').setAttribute('aria-expanded',open)};
+const close=el('button','mobile','Close explorer ×');close.onclick=closeMobile;$('sidebar').prepend(close);
+$('map').addEventListener('wheel',e=>{e.preventDefault();const r=$('map').getBoundingClientRect();zoom(Math.exp(-e.deltaY*.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+const pointers=new Map();let pinch=null;
+$('map').addEventListener('pointerdown',e=>{if(e.button!==0)return;const n=e.target.closest('.node');pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;drag={x:e.clientX,y:e.clientY,tx,ty,id:n?.dataset.id};if(n){drag.px=positions.get(drag.id).x;drag.py=positions.get(drag.id).y}else $('map').setPointerCapture(e.pointerId);if(pointers.size===2){const [a,b]=[...pointers.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y);drag.id=null}});
+$('map').addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId)||!drag)return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>5)moved=true;if(!moved)return;$('map').classList.add('dragging');
+ if(pointers.size===2){const [a,b]=[...pointers.values()],distance=Math.hypot(a.x-b.x,a.y-b.y),r=$('map').getBoundingClientRect();if(pinch)zoom(distance/pinch,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);pinch=distance}
+ else if(drag.id){$('map').setPointerCapture(e.pointerId);const p={x:drag.px+dx/scale,y:drag.py+dy/scale};positions.set(drag.id,p);if(mode==='full'&&!route)homePositions.set(drag.id,p);const b=$('nodes').querySelector(`[data-id="${drag.id}"]`);b.style.left=p.x+'px';b.style.top=p.y+'px';drawEdges()}
+ else{tx=drag.tx+dx;ty=drag.ty+dy;transform()}
+});
+function endPointer(e){pointers.delete(e.pointerId);pinch=null;const p=[...pointers.values()][0];drag=p?{x:p.x,y:p.y,tx,ty}:null;if(!p)$('map').classList.remove('dragging')}
+$('map').addEventListener('pointerup',endPointer);$('map').addEventListener('pointercancel',endPointer);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')){if(e.key==='Escape'){$('search').value='';renderSearch();$('search').blur()}return}if(e.key==='/'){e.preventDefault();$('app').classList.add('sidebar-open');$('menu').setAttribute('aria-expanded','true');$('search').focus()}if(e.key==='Escape'){closeMobile();reset()}if(e.key==='+'||e.key==='=')zoom(1.25);if(e.key==='-')zoom(.8);if(e.key==='0')fit()});
+// Export the actual current graph as a portable vector image, without remote dependencies.
+$('export').onclick=()=>{
+ const b=bounds(),out=svg('svg',{xmlns:NS,viewBox:`${b.x} ${b.y-50} ${b.w} ${b.h+90}`,width:Math.ceil(b.w),height:Math.ceil(b.h+90)});
+ out.append(svg('rect',{x:b.x,y:b.y-50,width:b.w,height:b.h+90,fill:'#101820'}));
+ const style=svg('style');style.textContent='.wire{fill:none;stroke:#778e9f;stroke-width:1.2;opacity:.4}.cross{stroke-dasharray:5 5}.hot{stroke:#b4e5d0;opacity:1;stroke-width:2}.faint{opacity:.12}.edge-label{font:12px sans-serif;fill:#e4f7ee;paint-order:stroke;stroke:#101820;stroke-width:5;text-anchor:middle}';out.append(style);
+ const title=svg('text',{x:b.x+10,y:b.y-18,fill:'#e6edf0','font-family':'sans-serif','font-size':20});title.textContent='AI Atlas — '+$('view-title').textContent;out.append(title);
+ const wires=$('wires').cloneNode(true);wires.removeAttribute('class');wires.removeAttribute('width');wires.removeAttribute('height');const group=svg('g');while(wires.firstChild)group.append(wires.firstChild);out.append(group);
+ visible.forEach(n=>{const p=positions.get(n.id);out.append(svg('rect',{x:p.x-85,y:p.y-29,width:170,height:58,rx:9,fill:'#17232e',stroke:n.group.color}));const label=svg('text',{x:p.x,y:p.y,fill:'#e6edf0','font-family':'sans-serif','font-size':12,'text-anchor':'middle'});const words=n.label.split(' '),lines=[''];for(const word of words){const last=lines.length-1;if((lines[last]+' '+word).trim().length>21&&lines[last])lines.push(word);else lines[last]=(lines[last]+' '+word).trim()}lines.forEach((line,i)=>{const t=svg('tspan',{x:p.x,dy:i?15:4-(lines.length-1)*7.5});t.textContent=line;label.append(t)});out.append(label)});
+ const blob=new Blob([new XMLSerializer().serializeToString(out)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download='ai-atlas-connected.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(byId.has(id)){selected=id;mode='local';route=null;render();fit()}else reset()});
+new ResizeObserver(()=>fit(region?groups.find(g=>g.id===region).ids:undefined)).observe($('map'));
+if(byId.has(location.hash.slice(1))){selected=location.hash.slice(1);mode='local'}
+render();fit();
+</script>
+</body>
+</html>
