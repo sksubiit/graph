@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0}button,input,select,a{font:inherit}button{cursor:pointer;color:inherit;background:transparent;border:0}button:hover{background:#ffffff0c}a{color:var(--mint);text-decoration:none}:focus-visible{outline:2px solid var(--mint);outline-offset:3px}button:disabled{opacity:.4;cursor:default}
 .app{height:100dvh;display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:72px minmax(0,1fr)}header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 25px;border-bottom:1px solid var(--line);gap:20px;background:#121c25}.brand{display:flex;align-items:center;gap:12px}.mark{font-size:26px;color:var(--mint)}.brand strong{font-size:18px;letter-spacing:-.5px}.edition{font-size:10px;color:var(--muted);letter-spacing:2px;padding-left:16px;border-left:1px solid var(--line)}.header-links{display:flex;gap:18px;font-size:12px}.header-links a{color:var(--muted)}.header-links a:hover{color:var(--mint)}
 aside{min-height:0;overflow:auto;border-right:1px solid var(--line);background:#121c25;padding:24px 20px;scrollbar-width:thin}.eyebrow{font-size:10px;letter-spacing:1.7px;color:var(--mint);text-transform:uppercase;font-weight:600}aside h1{font-family:Georgia,serif;font-size:29px;font-weight:400;line-height:1.12;letter-spacing:-.8px;margin:12px 0}.intro{font-size:12px;line-height:1.7;color:var(--muted)}.search{width:100%;border:1px solid #374753;border-radius:8px;padding:11px 12px;background:#192630;color:var(--text);font-size:12px;margin:8px 0 18px}.section-title{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}.section-title button{font-size:11px;letter-spacing:0;text-transform:none;color:var(--mint)}.group-button{display:flex;width:100%;gap:10px;align-items:center;text-align:left;padding:8px 2px;border-radius:5px;font-size:12px}.swatch{width:7px;height:7px;border-radius:50%;background:var(--c);flex-shrink:0}.group-button small{margin-left:auto;color:var(--muted);font-size:10px}.route{width:100%;display:block;padding:10px 11px;text-align:left;margin:6px 0;border:1px solid var(--line);border-radius:7px;font-size:12px}.route span{display:block;color:var(--muted);font-size:10px;margin-top:4px}.route[aria-pressed=true]{border-color:#82bca7;background:#20332f}.result{display:block;text-align:left;width:100%;padding:9px 6px;font-size:12px;border-bottom:1px solid #ffffff08}.result small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.no-result{font-size:12px;color:var(--muted)}
-.selection{border-top:1px solid var(--line);margin-top:23px;padding-top:20px}.selection h2{font-size:21px;letter-spacing:-.6px;margin:9px 0}.selection p{font-size:12px;line-height:1.7;color:#b8c7ce}.selection .note{border-left:2px solid var(--mint);padding-left:10px;color:var(--text)}.relation{display:block;width:100%;text-align:left;padding:10px 0;border-top:1px solid #ffffff0c;font-size:11px;line-height:1.6}.relation em{font-style:normal;color:var(--mint)}.relation strong{font-weight:500}.relation span{color:var(--muted)}.primary{border:1px solid #547b6c;background:#20362e;color:#c5f1de;border-radius:6px;padding:9px 12px;font-size:11px}.sources{border-top:1px solid var(--line);margin-top:25px;padding-top:16px;font-size:11px;color:var(--muted);line-height:1.7}.sources summary{cursor:pointer}.sources a{display:block;margin-top:8px}
+.selection{border-top:1px solid var(--line);margin-top:23px;padding-top:20px}.selection h2{font-size:21px;letter-spacing:-.6px;margin:9px 0}.selection p{font-size:12px;line-height:1.7;color:#b8c7ce}.selection .note{border-left:2px solid var(--mint);padding-left:10px;color:var(--text)}.relation{display:block;width:100%;text-align:left;padding:10px 0;border-top:1px solid #ffffff0c;font-size:11px;line-height:1.6}.relation em{font-style:normal;color:var(--mint)}.relation strong{font-weight:500}.relation span{color:var(--muted)}.primary{border:1px solid #547b6c;background:#20362e;color:#c5f1de;border-radius:6px;padding:9px 12px;font-size:11px}
 main{min-width:0;min-height:0;display:flex;flex-direction:column}.toolbar{display:flex;justify-content:space-between;align-items:center;padding:20px 25px 16px;gap:14px;flex-wrap:wrap}.toolbar h2{font-size:19px;font-weight:500;letter-spacing:-.5px;margin:0 0 5px}.toolbar p{margin:0;color:var(--muted);font-size:11px}.view-switch{display:flex;gap:3px;padding:4px;border:1px solid var(--line);border-radius:8px}.view-switch button{padding:7px 11px;font-size:11px;border-radius:5px}.view-switch button[aria-pressed=true]{background:#30443e;color:#d7f2e5}.map{position:relative;overflow:hidden;flex:1;min-height:180px;touch-action:none;background-image:radial-gradient(#647b8229 .8px,transparent .8px),radial-gradient(ellipse at 45% 45%,#21413624,transparent 65%);background-size:22px 22px,100% 100%;cursor:grab}.map.dragging{cursor:grabbing}.world{position:absolute;transform-origin:0 0;left:0;top:0}.wires{position:absolute;width:1px;height:1px;overflow:visible;pointer-events:none}.wire{fill:none;stroke:#778e9f;stroke-width:1.25;opacity:.28}.wire.cross{stroke-dasharray:5 5;opacity:.2}.wire.hot{opacity:.88;stroke:#a7d9c4;stroke-width:2}.wire.faint{opacity:.045}.edge-label{font:12px "Segoe UI",sans-serif;fill:#e4f7ee;paint-order:stroke;stroke:#101820;stroke-width:6;stroke-linejoin:round;text-anchor:middle}.region{position:absolute;border:1px solid color-mix(in srgb,var(--c) 13%,transparent);border-radius:25px;background:color-mix(in srgb,var(--c) 3%,transparent);pointer-events:none}.region-title{position:absolute;top:15px;left:18px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--c)}.node{position:absolute;transform:translate(-50%,-50%);width:170px;min-height:48px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--c) 40%,#25313c);background:#17232e;border-radius:9px;text-align:left;box-shadow:0 4px 12px #0002;font-size:13px;line-height:1.25;display:flex;align-items:center;gap:8px;transition:opacity .15s,background .15s;cursor:pointer}.node .dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--c)}.node.hub{background:color-mix(in srgb,var(--c) 12%,#17232e);font-weight:600;font-size:15px;min-height:54px;border-color:color-mix(in srgb,var(--c) 60%,#25313c)}.node:hover,.node.selected{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,#17232e);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 13%,transparent)}.node.faint{opacity:.2}.node.neighbor{border-color:var(--c)}.node.selected{z-index:2}.map-hint{position:absolute;bottom:14px;left:20px;color:var(--muted);font-size:10px;pointer-events:none}.map-status{position:absolute;top:16px;left:20px;font-size:10px;color:var(--muted);background:#101820d9;padding:6px 9px;border-radius:5px;pointer-events:none}.footer{border-top:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:6px}.line{width:22px;border-top:1px solid #a1b7c2}.line.dashed{border-top-style:dashed}.controls{display:flex;align-items:center;gap:5px}.controls button{padding:6px 10px;border:1px solid var(--line);border-radius:5px;font-size:12px}.controls output{min-width:40px;text-align:center;font-size:10px;color:var(--muted)}.mobile{display:none}.small-note{font-size:10px!important;color:var(--muted)!important}
 @media(max-width:1000px){.app{grid-template-columns:270px minmax(0,1fr)}.edition{display:none}.toolbar{padding:16px}.toolbar h2{font-size:17px}.header-links{font-size:11px}.footer{padding:10px 14px}}
 @media(max-width:650px){.app{grid-template-columns:1fr;grid-template-rows:60px minmax(0,1fr)}header{padding:0 16px}.header-links a:last-child{display:none}aside{display:none;position:absolute;top:60px;bottom:0;left:0;width:min(320px,92vw);z-index:10;box-shadow:12px 0 40px #0008}.app.sidebar-open aside{display:block}.mobile{display:inline-block;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:11px}.toolbar{gap:10px}.toolbar h2{font-size:16px}.view-switch button{padding:7px 8px}.search{font-size:16px}.map-hint{font-size:9px;left:12px;right:12px}.controls{margin-left:auto}}
@@ -21,13 +21,12 @@ main{min-width:0;min-height:0;display:flex;flex-direction:column}.toolbar{displa
 <div class="app" id="app">
 <header><div class="brand"><span class="mark" aria-hidden="true">✳</span><strong>AI Atlas</strong><span class="edition">THE CONNECTED EDITION</span></div><nav class="header-links"><a href="graph.html">Tree edition ↗</a><a href="ai_ml_map.md">Master map ↗</a></nav></header>
 <aside id="sidebar" aria-label="Knowledge explorer">
- <div class="eyebrow">Ideas do not grow in straight lines</div><h1>A field of<br>connections.</h1><p class="intro">Explore what belongs where, what builds on what, and how different ideas come together.</p>
+ <div class="eyebrow">The conceptual map</div><h1>AI & ML.<br>The big picture.</h1><p class="intro">Understand the major ideas in AI and ML, where they belong, and how they connect.</p>
  <input type="search" class="search" id="search" placeholder="Find a concept…  /" aria-label="Search concepts and descriptions">
  <div id="results"></div>
  <div id="explorer"><div class="section-title">Explore a region <button id="reset">Reset</button></div><div id="groups"></div>
  <div class="section-title">Follow an idea</div><div id="routes"></div></div>
  <section class="selection" id="selection" aria-live="polite"></section>
- <details class="sources"><summary>How to read this map & sources</summary><p>This is a curated conceptual map, not an exhaustive taxonomy. Regions are lenses, not exclusive categories. Arrows read from source to target; dashed lines cross conceptual regions. “Can” and “often” indicate possible or typical relationships, not requirements.</p><p>Foundational references for selected connections:</p><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener">scikit-learn · Learning methods ↗</a><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Attention Is All You Need ↗</a><a href="https://arxiv.org/abs/2108.07258" target="_blank" rel="noopener">On Foundation Models ↗</a><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Retrieval-Augmented Generation ↗</a><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">Direct Preference Optimization ↗</a></details>
 </aside>
 <main><div class="toolbar"><div><h2 id="view-title">The whole field, woven together.</h2><p id="view-subtitle">Select a concept to illuminate its connections.</p></div><button class="mobile" id="menu" aria-expanded="false" aria-controls="sidebar">☰ Explore</button><div class="view-switch" aria-label="Map view"><button id="full" aria-pressed="true">Full network</button><button id="local" aria-pressed="false">Local view</button></div></div>
 <div class="map" id="map" aria-label="AI and machine learning relationship map"><div class="world" id="world"><div id="regions"></div><svg class="wires" id="wires" aria-hidden="true"></svg><div id="nodes"></div></div><div class="map-status" id="status"></div><div class="map-hint">Click a concept · Drag nodes to rearrange · Drag background to pan · Scroll or pinch to zoom</div></div>
@@ -35,110 +34,106 @@ main{min-width:0;min-height:0;display:flex;flex-direction:column}.toolbar{displa
 </div>
 <script>
 'use strict';
-// Curated nodes: [id, label, definition, optional distinction]. Regions are not an ontology.
+// Scope: foundational AI/ML concepts and cross-field relationships.
+// Algorithms, model internals, and robotics specializations belong in separate maps.
+// Nodes: [id, label, definition, optional distinction]. Regions are not an ontology.
 const GROUPS=[
-['foundations','Foundations','#b7bfdf',0,0,[
- ['math','Mathematics','The language used to describe models, uncertainty, and optimization.'],
- ['linear','Linear algebra','Vectors, matrices, tensors, and transformations underpin numerical representations.'],
- ['calculus','Calculus','Derivatives describe how changes in parameters affect an objective.'],
- ['probability','Probability & statistics','Represent uncertainty, estimate quantities, and learn from samples.'],
- ['optimization','Optimization','Choose parameters or decisions to improve an objective under constraints.'],
- ['information','Information theory','Entropy, cross-entropy, and divergence quantify information and distribution differences.'],
- ['algorithms','Algorithms & computation','Data structures, complexity, and numerical methods make AI procedures executable.']]],
-['learning','AI & learning','#9de0c4',1,0,[
- ['ai','Artificial intelligence','The broad field of building systems for tasks involving perception, reasoning, learning, and action.','AI includes learning-based, symbolic, probabilistic, and hybrid approaches.'],
- ['ml','Machine learning','Methods that improve task performance by learning patterns or behavior from data or experience.','Learning paradigm, model architecture, and application domain are different axes.'],
- ['supervised','Supervised learning','Learn from examples with target labels or outputs.'],
- ['unsupervised','Unsupervised learning','Find structure in data without supplied task labels.'],
- ['selfsupervised','Self-supervised learning','Construct training targets from the data itself, such as masked or next-token prediction.','Usually treated as a form of unsupervised learning; the training objective still supplies targets.'],
- ['semisupervised','Semi-supervised learning','Combine a smaller labeled dataset with additional unlabeled data.'],
- ['transfer','Transfer learning','Reuse knowledge learned on one task or dataset for another.'],
- ['active','Active learning','Select which examples should be labeled to use annotation effort efficiently.']]],
-['training','Training & adaptation','#e7bd82',2,0,[
- ['pretrain','Pretraining','Learn reusable parameters from a broad training corpus before task-specific adaptation.'],
- ['finetune','Fine-tuning','Update a pretrained model using additional task or domain data.'],
- ['sft','Supervised fine-tuning','Fine-tune on examples of desired inputs and outputs, including instruction-response pairs.'],
- ['lora','LoRA / adapters','Adapt models using a limited set of trainable parameters.'],
- ['rlhf','RLHF','Use human feedback to shape a reward signal and optimize model behavior with reinforcement learning.'],
- ['dpo','DPO','Train on preference pairs using a direct optimization objective.','DPO is an alternative to an explicit reward-model-plus-RL training loop.'],
- ['backprop','Backpropagation','Efficiently compute parameter gradients through a differentiable computation graph.'],
- ['gradient','Gradient-based learning','Update parameters using gradients; SGD and Adam are common optimizers.']]],
-['systems','Systems & agents','#90cce0',3,0,[
- ['agents','AI agents','Systems that select actions and interact with an environment to pursue goals.','An agent is a system, not a synonym for an LLM. Agents can be symbolic, learned, or hybrid.'],
- ['rag','Retrieval-augmented generation','Condition generation on information retrieved from an external collection.','RAG changes the context available to generation; it need not change model weights.'],
- ['retrieval','Information retrieval','Find relevant documents or items using lexical, vector, or hybrid search.'],
- ['tools','Tool use','Invoke external functions, APIs, or software to obtain information or take actions.'],
- ['memory','State & memory','Maintain task state and retain information across system interactions.'],
- ['orchestration','Workflow orchestration','Coordinate steps, models, tools, retries, and human handoffs.'],
- ['kg','Knowledge graphs','Represent entities and relationships explicitly for querying and reasoning.'],
- ['vector','Vector indexes','Index vector representations for similarity search.']]],
-['symbolic','Reasoning & search','#d7aa91',0,1,[
- ['symbolic','Symbolic AI','Represent knowledge with explicit symbols, rules, and structures.'],
- ['logic','Logic & reasoning','Derive conclusions from premises using formal rules.'],
- ['search','Search','Explore candidate states or solutions, often using heuristics.'],
- ['planning','Planning','Choose sequences of actions to achieve goals, often using a model of state transitions.'],
- ['constraints','Constraint solving','Find assignments satisfying constraints; includes CSP and SAT methods.'],
- ['expert','Expert systems','Use encoded domain knowledge and rules to support decisions.'],
- ['neurosymbolic','Neuro-symbolic AI','Combine learned representations with explicit symbolic structure or reasoning.']]],
-['architectures','Models & architectures','#b5a2e0',1,1,[
- ['deep','Deep learning','Learn with neural networks containing multiple layers of representation.','Deep learning is a family of ML methods; it can use many learning paradigms.'],
- ['nn','Neural networks','Parameterized networks of units that transform inputs into outputs.'],
- ['transformer','Transformers','Neural architectures built around attention and feed-forward processing.','Transformers are used beyond language, including vision, audio, and control.'],
- ['attention','Attention','Weight and combine information according to relationships between queries, keys, and values.'],
- ['cnn','Convolutional networks','Use shared local filters to capture structure in grids such as images.'],
- ['rnn','Recurrent networks','Process sequential inputs with a recurrent hidden state; includes LSTM and GRU.'],
- ['gnn','Graph neural networks','Compute representations from graph structure and node or edge features.'],
- ['classical','Classical ML models','Families including linear models, decision trees, kernels, and nearest-neighbor methods.']]],
-['generation','Representations & generation','#df9dbd',2,1,[
- ['generative','Generative modeling','Model data distributions to generate or explain observations.','Generative AI spans several model families and is not limited to LLMs.'],
- ['llm','Large language models','Large-scale models that learn patterns in language and support language tasks.','Many modern LLMs use transformers; scale and language focus do not define an agent.'],
- ['foundation','Foundation models','Broadly pretrained models designed for adaptation to many downstream tasks.','This is a role and training regime, not a single architecture or modality.'],
- ['embeddings','Embeddings','Vector representations encoding useful properties of tokens, images, entities, or other inputs.'],
- ['diffusion','Diffusion models','Generate through a learned process that reverses progressive corruption of data.'],
- ['gan','GANs','Train a generator and discriminator through an adversarial objective.'],
- ['vae','Variational autoencoders','Latent-variable generative models learned with a variational objective.'],
- ['autoregressive','Autoregressive models','Factor a sequence distribution into conditional predictions of successive elements.']]],
-['applications','Tasks & modalities','#91c8ad',3,1,[
- ['nlp','Language / NLP','Analyze and generate language: classification, translation, extraction, and more.'],
- ['vision','Computer vision','Interpret visual inputs, including recognition, detection, and segmentation.'],
- ['audio','Speech & audio','Recognize, understand, and generate speech and other sound.'],
- ['multimodal','Multimodal AI','Combine information from more than one modality, such as text, images, and audio.'],
- ['robotics','Robotics','Integrate sensing, state estimation, planning, and control in physical systems.'],
- ['recommend','Recommendation','Rank and select items or actions relevant to a user or context.'],
- ['forecast','Forecasting','Predict future values from past observations and other information.'],
- ['science','AI for science','Use AI for scientific prediction, discovery, simulation, and design.']]],
-['uncertainty','Uncertainty & causality','#91b4d8',0,2,[
- ['probai','Probabilistic AI','Represent uncertain quantities and reason with probability distributions.'],
- ['bayes','Bayesian inference','Update beliefs using evidence through a probabilistic model.'],
- ['graphical','Graphical models','Represent dependency structure among random variables with graphs.'],
- ['causal','Causal inference','Estimate effects of interventions under explicit causal assumptions.','Predictive correlation alone does not identify causal effects.'],
- ['latent','Latent-variable models','Use unobserved variables to explain observed data.'],
- ['sampling','Sampling & inference','Approximate expectations or distributions using methods such as Monte Carlo and MCMC.']]],
-['decisions','Decisions & interaction','#d5c786',1,2,[
- ['rl','Reinforcement learning','Learn policies from interaction or recorded experience using reward signals.','RL is a learning paradigm; it does not require deep neural networks.'],
- ['mdp','Markov decision processes','Model sequential decisions with states, actions, transitions, and rewards.'],
- ['policy','Policies & value functions','Policies choose actions; value functions estimate expected future returns.'],
- ['deeprl','Deep reinforcement learning','Use deep networks to represent policies, values, or models in RL.'],
- ['world','World models','Predict aspects of environment dynamics to support reasoning or planning.'],
- ['multiagent','Multi-agent systems','Study multiple interacting agents, including cooperation and competition.'],
- ['evolution','Evolutionary methods','Search over candidate solutions using variation and selection.'],
- ['control','Control theory','Design feedback policies to regulate dynamical systems.']]],
-['engineering','Data & engineering','#a0c4b6',2,2,[
- ['data','Data engineering','Collect, clean, label, version, and organize data for training and evaluation.'],
- ['evaluation','Evaluation','Measure model or system performance with suitable tasks, metrics, and test data.'],
- ['generalization','Generalization','How well learned behavior transfers beyond training examples.'],
- ['regularization','Regularization','Constrain or bias learning to improve generalization and reduce overfitting.'],
- ['inference','Model inference','Run a trained model to produce outputs for new inputs.','Model inference means execution; statistical inference means drawing conclusions from data.'],
- ['compression','Model compression','Reduce model cost through quantization, pruning, or distillation.'],
- ['mlops','MLOps & deployment','Version, deploy, serve, observe, and maintain ML systems.'],
- ['monitoring','Monitoring & drift','Track production performance and changes in data or behavior.']]],
-['trust','Understanding & trust','#c6a5ae',3,2,[
- ['interpret','Interpretability','Investigate model behavior, learned representations, and internal mechanisms.'],
- ['alignment','Alignment','Seek model or system behavior consistent with intended goals and constraints.'],
- ['safety','Safety & robustness','Evaluate and reduce harmful or unreliable behavior under real-world conditions.'],
- ['security','AI security','Protect models, data, and applications from adversarial manipulation.'],
- ['privacy','Privacy','Limit the exposure or misuse of information about individuals or sensitive records.'],
- ['fairness','Fairness & governance','Examine impacts across groups and define accountability, policy, and oversight.']]]
+["foundations","Foundations","#b7bfdf",0,0,[
+ ["math","Mathematics","The language used to describe models, uncertainty, and optimization."],
+ ["linear","Linear algebra","Vectors, matrices, tensors, and transformations underpin numerical representations."],
+ ["calculus","Calculus","Derivatives describe how changes in parameters affect an objective."],
+ ["probability","Probability & statistics","Represent uncertainty, estimate quantities, and learn from samples."],
+ ["optimization","Optimization","Choose parameters or decisions to improve an objective under constraints."],
+ ["information","Information theory","Entropy, cross-entropy, and divergence quantify information and distribution differences."],
+ ["algorithms","Algorithms & computation","Data structures, complexity, and numerical methods make AI procedures executable."]
+]],
+["learning","AI & learning","#9de0c4",1,0,[
+ ["ai","Artificial intelligence","The broad field of building systems for tasks involving perception, reasoning, learning, and action.","AI includes learning-based, symbolic, probabilistic, and hybrid approaches."],
+ ["ml","Machine learning","Methods that improve task performance by learning patterns or behavior from data or experience.","Learning paradigm, model architecture, and application domain are different axes."],
+ ["supervised","Supervised learning","Learn from examples with target labels or outputs."],
+ ["unsupervised","Unsupervised learning","Find structure in data without supplied task labels."],
+ ["selfsupervised","Self-supervised learning","Construct training targets from the data itself, such as masked or next-token prediction.","Usually treated as a form of unsupervised learning; the training objective still supplies targets."],
+ ["semisupervised","Semi-supervised learning","Combine a smaller labeled dataset with additional unlabeled data."],
+ ["transfer","Transfer learning","Reuse knowledge learned on one task or dataset for another."]
+]],
+["training","Training & adaptation","#e7bd82",2,0,[
+ ["pretrain","Pretraining","Learn reusable parameters from a broad training corpus before task-specific adaptation."],
+ ["finetune","Fine-tuning","Update a pretrained model using additional task or domain data."],
+ ["posttrain","Post-training","Further training that adapts a pretrained model toward desired tasks or behavior.","A broad stage that can include supervised fine-tuning, preference learning, and reinforcement learning."]
+]],
+["systems","Systems & agents","#90cce0",3,0,[
+ ["agents","AI agents","Systems that select actions and interact with an environment to pursue goals.","An agent is a system, not a synonym for an LLM. Agents can be symbolic, learned, or hybrid."],
+ ["rag","Retrieval-augmented generation","Condition generation on information retrieved from an external collection.","RAG changes the context available to generation; it need not change model weights."],
+ ["retrieval","Information retrieval","Find relevant documents or items using lexical, vector, or hybrid search."],
+ ["tools","Tool use","Invoke external functions, APIs, or software to obtain information or take actions."],
+ ["memory","State & memory","Maintain task state and retain information across system interactions."],
+ ["kg","Knowledge graphs","Represent entities and relationships explicitly for querying and reasoning."]
+]],
+["symbolic","Reasoning & search","#d7aa91",0,1,[
+ ["symbolic","Symbolic AI","Represent knowledge with explicit symbols, rules, and structures."],
+ ["logic","Logic & reasoning","Derive conclusions from premises using formal rules."],
+ ["search","Search","Explore candidate states or solutions, often using heuristics."],
+ ["planning","Planning","Choose sequences of actions to achieve goals, often using a model of state transitions."],
+ ["constraints","Constraint solving","Find solutions that satisfy specified restrictions or requirements."],
+ ["expert","Expert systems","Use encoded domain knowledge and rules to support decisions."],
+ ["neurosymbolic","Neuro-symbolic AI","Combine learned representations with explicit symbolic structure or reasoning."]
+]],
+["architectures","Models & architectures","#b5a2e0",1,1,[
+ ["deep","Deep learning","Learn with neural networks containing multiple layers of representation.","Deep learning is a family of ML methods; it can use many learning paradigms."],
+ ["nn","Neural networks","Parameterized networks of units that transform inputs into outputs."],
+ ["transformer","Transformers","Neural architectures that learn relationships between parts of an input through attention.","An architecture, not a learning paradigm or an application. Transformers can be used for language, vision, and other kinds of data."],
+ ["cnn","Convolutional networks","Use shared local filters to capture structure in grids such as images."],
+ ["rnn","Recurrent networks","Neural architectures that process sequences through an evolving internal state."],
+ ["gnn","Graph neural networks","Compute representations from graph structure and node or edge features."],
+ ["classical","Classical ML models","Model families such as linear models, trees, kernels, and nearest-neighbor methods.","A broad collection of approaches; individual families have their own assumptions and methods."]
+]],
+["generation","Representations & generation","#df9dbd",2,1,[
+ ["generative","Generative modeling","Model data distributions to generate or explain observations.","Generative AI spans several model families and is not limited to LLMs."],
+ ["llm","Large language models","Large-scale models that learn patterns in language and support language tasks.","Many modern LLMs use transformers; scale and language focus do not define an agent."],
+ ["foundation","Foundation models","Broadly pretrained models designed for adaptation to many downstream tasks.","This is a role and training regime, not a single architecture or modality."],
+ ["embeddings","Embeddings","Vector representations encoding useful properties of tokens, images, entities, or other inputs."]
+]],
+["applications","Tasks & modalities","#91c8ad",3,1,[
+ ["nlp","Language / NLP","Analyze and generate language: classification, translation, extraction, and more."],
+ ["vision","Computer vision","Interpret visual inputs, including recognition, detection, and segmentation."],
+ ["audio","Speech & audio","Recognize, understand, and generate speech and other sound."],
+ ["multimodal","Multimodal AI","Combine information from more than one modality, such as text, images, and audio."],
+ ["robotics","Robotics","Integrate sensing, state estimation, planning, and control in physical systems."],
+ ["recommend","Recommendation","Rank and select items or actions relevant to a user or context."],
+ ["forecast","Forecasting","Predict future values from past observations and other information."],
+ ["science","AI for science","Use AI for scientific prediction, discovery, simulation, and design."]
+]],
+["uncertainty","Uncertainty & causality","#91b4d8",0,2,[
+ ["probai","Probabilistic AI","Represent uncertain quantities and reason with probability distributions."],
+ ["bayes","Bayesian inference","Update beliefs using evidence through a probabilistic model."],
+ ["graphical","Graphical models","Represent dependency structure among random variables with graphs."],
+ ["causal","Causal inference","Estimate effects of interventions under explicit causal assumptions.","Predictive correlation alone does not identify causal effects."]
+]],
+["decisions","Decisions & interaction","#d5c786",1,2,[
+ ["rl","Reinforcement learning","Learn policies from interaction or recorded experience using reward signals.","RL is a learning paradigm; it does not require deep neural networks."],
+ ["policy","Policies","Rules or learned mappings for selecting actions from available information.","A policy chooses what to do. Planning can use predicted consequences to choose actions, while a policy can select actions directly."],
+ ["world","World models","Models that predict how an environment may change, often in response to actions.","Prediction is distinct from action selection: a world model predicts consequences, while a policy chooses actions."],
+ ["multiagent","Multi-agent systems","Study multiple interacting agents, including cooperation and competition."],
+ ["evolution","Evolutionary methods","Search over candidate solutions using variation and selection."],
+ ["control","Control theory","Design feedback policies to regulate dynamical systems."],
+ ["modelbased","Model-based RL","Reinforcement learning that uses an environment model to support learning or decision-making.","The environment model may be supplied or learned. This distinction is about using predictions of the environment, not about a particular algorithm."],
+ ["modelfree","Model-free RL","Reinforcement learning that learns how to act without using an explicit environment model for planning or policy improvement.","Model-free methods can still use neural networks: a policy model is different from an environment model."]
+]],
+["engineering","Data & engineering","#a0c4b6",2,2,[
+ ["data","Data engineering","Collect, clean, label, version, and organize data for training and evaluation."],
+ ["evaluation","Evaluation","Measure model or system performance with suitable tasks, metrics, and test data."],
+ ["generalization","Generalization","How well learned behavior transfers beyond training examples."],
+ ["inference","Model inference","Run a trained model to produce outputs for new inputs.","Model inference means execution; statistical inference means drawing conclusions from data."],
+ ["mlops","MLOps & deployment","Version, deploy, serve, observe, and maintain ML systems."]
+]],
+["trust","Understanding & trust","#c6a5ae",3,2,[
+ ["interpret","Interpretability","Investigate model behavior, learned representations, and internal mechanisms."],
+ ["alignment","Alignment","Seek model or system behavior consistent with intended goals and constraints."],
+ ["safety","Safety & robustness","Evaluate and reduce harmful or unreliable behavior under real-world conditions."],
+ ["security","AI security","Protect models, data, and applications from adversarial manipulation."],
+ ["privacy","Privacy","Limit the exposure or misuse of information about individuals or sensitive records."],
+ ["fairness","Fairness & governance","Examine impacts across groups and define accountability, policy, and oversight."]
+]]
 ];
 // Edges are statements: source — relationship → target. No implicit inheritance.
 const EDGE_TEXT=`
@@ -161,12 +156,10 @@ ml|includes|semisupervised
 ml|includes|rl
 ml|includes|deep
 ml|uses|classical
-ml|can use|active
 ml|can reuse knowledge through|transfer
 unsupervised|includes|selfsupervised
 supervised|uses labels from|data
 semisupervised|combines labeled and unlabeled|data
-active|selects examples for labeling in|data
 transfer|can use|finetune
 classical|can be trained with|supervised
 classical|can be trained with|unsupervised
@@ -184,10 +177,7 @@ neurosymbolic|combines with learned models|symbolic
 neurosymbolic|can use|nn
 probai|uses|bayes
 probai|uses|graphical
-probai|uses|sampling
-graphical|can encode|latent
 bayes|uses|probability
-bayes|can be approximated with|sampling
 causal|can use|graphical
 causal|helps assess interventions in|science
 causal|can inform|fairness
@@ -196,7 +186,6 @@ nn|includes architecture family|transformer
 nn|includes architecture family|cnn
 nn|includes architecture family|rnn
 nn|includes architecture family|gnn
-transformer|uses|attention
 transformer|can process|vision
 transformer|can process|audio
 transformer|can support|multimodal
@@ -211,53 +200,24 @@ embeddings|use vector spaces from|linear
 deep|can use|supervised
 deep|can use|selfsupervised
 deep|can be combined with|rl
-nn|is often trained using|backprop
-backprop|applies chain rule from|calculus
-backprop|supplies gradients for|gradient
-gradient|is a form of|optimization
-gradient|updates parameters during|pretrain
-gradient|updates parameters during|finetune
-regularization|aims to improve|generalization
 evaluation|estimates|generalization
 ml|requires attention to|generalization
 pretrain|often uses|selfsupervised
 pretrain|learns from|data
 pretrain|can produce|foundation
 foundation|can be adapted with|finetune
-finetune|includes|sft
-finetune|can use|lora
-sft|uses|supervised
-llm|can be post-trained with|rlhf
-llm|can be post-trained with|dpo
-rlhf|uses|rl
-rlhf|aims to improve|alignment
-dpo|aims to improve|alignment
-generative|includes|diffusion
-generative|includes|gan
-generative|includes|vae
-generative|includes|autoregressive
-vae|is a family of|latent
-vae|uses approximate posterior inference from|probai
-diffusion|often uses|nn
-diffusion|can use|transformer
-gan|uses competing|nn
-autoregressive|can be implemented with|rnn
 llm|often uses|transformer
-llm|often uses|autoregressive
 llm|can serve as|foundation
 llm|supports|nlp
 foundation|can support|vision
 foundation|can support|audio
 foundation|can be|multimodal
-autoregressive|often generates using|sampling
 generative|can generate content for|audio
 generative|can generate visual content for|vision
 information|provides common loss functions for|generative
 nlp|can use|embeddings
 recommend|can use|embeddings
 retrieval|can use|embeddings
-vector|indexes|embeddings
-retrieval|can use|vector
 rag|combines generation with|retrieval
 rag|often uses|llm
 rag|can retrieve from|kg
@@ -266,17 +226,10 @@ agents|can use|planning
 agents|can use|tools
 agents|can use|memory
 agents|can use|rag
-agents|can be coordinated by|orchestration
 agents|can act through|robotics
-orchestration|coordinates|tools
 multiagent|studies interacting|agents
-rl|often formalizes tasks with|mdp
 rl|learns|policy
-rl|includes|deeprl
-deeprl|uses|deep
-mdp|defines transitions and rewards for|policy
 world|can support|planning
-world|can support model-based|rl
 rl|can be used for|control
 control|supports|robotics
 robotics|often uses|vision
@@ -291,10 +244,7 @@ data|feeds|evaluation
 evaluation|measures behavior of|agents
 evaluation|measures behavior of|llm
 inference|runs trained|nn
-compression|can reduce cost of|inference
 mlops|operationalizes|inference
-mlops|includes|monitoring
-monitoring|can trigger new|evaluation
 mlops|manages|data
 interpret|investigates|nn
 interpret|can inform|safety
@@ -311,12 +261,32 @@ multimodal|can integrate|vision
 multimodal|can integrate|audio
 science|can use|generative
 forecast|can use|probai
+rl|includes|modelbased
+rl|includes|modelfree
+modelbased|can learn and use|world
+modelbased|learns or improves|policy
+modelfree|learns|policy
+ml|learns from|data
+ml|often relies on|optimization
+llm|can be adapted through|posttrain
+posttrain|can include|finetune
+posttrain|can use|rl
+posttrain|can aim to improve|alignment
+generative|can use|nn
+generative|can use|probai
+llm|can perform|generative
+planning|can inform|policy
+agents|can act according to|policy
+nn|uses numerical representations from|linear
+optimization|can use|calculus
+information|provides learning objectives for|ml
+bayes|is a form of inference within|probai
 `;
 const ROUTES=[
- {id:'language',title:'From learning to language',sub:'ML → deep learning → transformers → LLMs',nodes:['ai','ml','deep','nn','transformer','llm','nlp']},
- {id:'agent',title:'From a model to a system',sub:'LLMs, retrieval, tools, memory, and agents',nodes:['llm','rag','retrieval','embeddings','vector','agents','tools','memory','planning']},
- {id:'acting',title:'From learning to action',sub:'Rewards, policies, world models, and robots',nodes:['ml','rl','mdp','policy','deeprl','deep','world','planning','robotics','control']},
- {id:'beyond',title:'Beyond neural networks',sub:'Symbols, uncertainty, search, and constraints',nodes:['ai','symbolic','logic','search','planning','constraints','expert','probai','bayes','graphical','causal']}
+ {"id":"language","title":"From AI to language models","sub":"Field → learning → architecture → application","nodes":["ai","ml","deep","nn","transformer","llm","nlp"]},
+ {"id":"agent","title":"From models to systems","sub":"Models, retrieval, tools, memory, and agents","nodes":["llm","rag","retrieval","embeddings","agents","tools","memory","planning"]},
+ {"id":"acting","title":"Prediction and action","sub":"Learning, world models, planning, and policies","nodes":["rl","modelbased","modelfree","world","planning","policy","agents"]},
+ {"id":"beyond","title":"Beyond neural networks","sub":"Symbols, uncertainty, search, and constraints","nodes":["ai","symbolic","logic","search","planning","constraints","expert","probai","bayes","graphical","causal"]}
 ];
 // UI and graph rendering follow below.
 const $=id=>document.getElementById(id);
