@@ -1,417 +1,434 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Interactive AI Graph</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    html,body{height:100%;margin:0;font-family:Segoe UI,Roboto,Arial}
-    #app{display:flex;height:100%}
-    #cy{flex:1;position:relative;background:#fff}
-    #panel{width:300px;padding:12px;box-sizing:border-box;border-left:1px solid #ddd;background:#fafafa}
-    .btn{display:inline-block;margin:4px 4px;padding:8px 10px;background:#0077be;color:#fff;border-radius:6px;cursor:pointer}
-    .btn.secondary{background:#555}
-    h3{margin:6px 0 8px 0;font-size:15px}
-    .legend-item{margin:6px 0;padding:6px;border-radius:6px}
-  </style>
-  <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
-  <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
-  <script src="https://unpkg.com/cytoscape-dagre/cytoscape-dagre.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101820">
+<title>AI Atlas — The connected map</title>
+<style>
+:root{color-scheme:dark;--bg:#101820;--panel:#151f29;--line:#2b3945;--text:#e6edf0;--muted:#9aaaae;--mint:#9de0c4;font-family:Inter,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+*{box-sizing:border-box}body{margin:0}button,input,select,a{font:inherit}button{cursor:pointer;color:inherit;background:transparent;border:0}button:hover{background:#ffffff0c}a{color:var(--mint);text-decoration:none}:focus-visible{outline:2px solid var(--mint);outline-offset:3px}button:disabled{opacity:.4;cursor:default}
+.app{height:100dvh;display:grid;grid-template-columns:300px minmax(0,1fr);grid-template-rows:72px minmax(0,1fr)}header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 25px;border-bottom:1px solid var(--line);gap:20px;background:#121c25}.brand{display:flex;align-items:center;gap:12px}.mark{font-size:26px;color:var(--mint)}.brand strong{font-size:18px;letter-spacing:-.5px}.edition{font-size:10px;color:var(--muted);letter-spacing:2px;padding-left:16px;border-left:1px solid var(--line)}.header-links{display:flex;gap:18px;font-size:12px}.header-links a{color:var(--muted)}.header-links a:hover{color:var(--mint)}
+aside{min-height:0;overflow:auto;border-right:1px solid var(--line);background:#121c25;padding:24px 20px;scrollbar-width:thin}.eyebrow{font-size:10px;letter-spacing:1.7px;color:var(--mint);text-transform:uppercase;font-weight:600}aside h1{font-family:Georgia,serif;font-size:29px;font-weight:400;line-height:1.12;letter-spacing:-.8px;margin:12px 0}.intro{font-size:12px;line-height:1.7;color:var(--muted)}.search{width:100%;border:1px solid #374753;border-radius:8px;padding:11px 12px;background:#192630;color:var(--text);font-size:12px;margin:8px 0 18px}.section-title{display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}.section-title button{font-size:11px;letter-spacing:0;text-transform:none;color:var(--mint)}.group-button{display:flex;width:100%;gap:10px;align-items:center;text-align:left;padding:8px 2px;border-radius:5px;font-size:12px}.swatch{width:7px;height:7px;border-radius:50%;background:var(--c);flex-shrink:0}.group-button small{margin-left:auto;color:var(--muted);font-size:10px}.route{width:100%;display:block;padding:10px 11px;text-align:left;margin:6px 0;border:1px solid var(--line);border-radius:7px;font-size:12px}.route span{display:block;color:var(--muted);font-size:10px;margin-top:4px}.route[aria-pressed=true]{border-color:#82bca7;background:#20332f}.result{display:block;text-align:left;width:100%;padding:9px 6px;font-size:12px;border-bottom:1px solid #ffffff08}.result small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.no-result{font-size:12px;color:var(--muted)}
+.selection{border-top:1px solid var(--line);margin-top:23px;padding-top:20px}.selection h2{font-size:21px;letter-spacing:-.6px;margin:9px 0}.selection p{font-size:12px;line-height:1.7;color:#b8c7ce}.selection .note{border-left:2px solid var(--mint);padding-left:10px;color:var(--text)}.relation{display:block;width:100%;text-align:left;padding:10px 0;border-top:1px solid #ffffff0c;font-size:11px;line-height:1.6}.relation em{font-style:normal;color:var(--mint)}.relation strong{font-weight:500}.relation span{color:var(--muted)}.primary{border:1px solid #547b6c;background:#20362e;color:#c5f1de;border-radius:6px;padding:9px 12px;font-size:11px}.sources{border-top:1px solid var(--line);margin-top:25px;padding-top:16px;font-size:11px;color:var(--muted);line-height:1.7}.sources summary{cursor:pointer}.sources a{display:block;margin-top:8px}
+main{min-width:0;min-height:0;display:flex;flex-direction:column}.toolbar{display:flex;justify-content:space-between;align-items:center;padding:20px 25px 16px;gap:14px;flex-wrap:wrap}.toolbar h2{font-size:19px;font-weight:500;letter-spacing:-.5px;margin:0 0 5px}.toolbar p{margin:0;color:var(--muted);font-size:11px}.view-switch{display:flex;gap:3px;padding:4px;border:1px solid var(--line);border-radius:8px}.view-switch button{padding:7px 11px;font-size:11px;border-radius:5px}.view-switch button[aria-pressed=true]{background:#30443e;color:#d7f2e5}.map{position:relative;overflow:hidden;flex:1;min-height:180px;touch-action:none;background-image:radial-gradient(#647b8229 .8px,transparent .8px),radial-gradient(ellipse at 45% 45%,#21413624,transparent 65%);background-size:22px 22px,100% 100%;cursor:grab}.map.dragging{cursor:grabbing}.world{position:absolute;transform-origin:0 0;left:0;top:0}.wires{position:absolute;width:1px;height:1px;overflow:visible;pointer-events:none}.wire{fill:none;stroke:#778e9f;stroke-width:1.25;opacity:.28}.wire.cross{stroke-dasharray:5 5;opacity:.2}.wire.hot{opacity:.88;stroke:#a7d9c4;stroke-width:2}.wire.faint{opacity:.045}.edge-label{font:12px "Segoe UI",sans-serif;fill:#e4f7ee;paint-order:stroke;stroke:#101820;stroke-width:6;stroke-linejoin:round;text-anchor:middle}.region{position:absolute;border:1px solid color-mix(in srgb,var(--c) 13%,transparent);border-radius:25px;background:color-mix(in srgb,var(--c) 3%,transparent);pointer-events:none}.region-title{position:absolute;top:15px;left:18px;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--c)}.node{position:absolute;transform:translate(-50%,-50%);width:170px;min-height:48px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--c) 40%,#25313c);background:#17232e;border-radius:9px;text-align:left;box-shadow:0 4px 12px #0002;font-size:13px;line-height:1.25;display:flex;align-items:center;gap:8px;transition:opacity .15s,background .15s;cursor:pointer}.node .dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:var(--c)}.node.hub{background:color-mix(in srgb,var(--c) 12%,#17232e);font-weight:600;font-size:15px;min-height:54px;border-color:color-mix(in srgb,var(--c) 60%,#25313c)}.node:hover,.node.selected{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,#17232e);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 13%,transparent)}.node.faint{opacity:.2}.node.neighbor{border-color:var(--c)}.node.selected{z-index:2}.map-hint{position:absolute;bottom:14px;left:20px;color:var(--muted);font-size:10px;pointer-events:none}.map-status{position:absolute;top:16px;left:20px;font-size:10px;color:var(--muted);background:#101820d9;padding:6px 9px;border-radius:5px;pointer-events:none}.footer{border-top:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:6px}.line{width:22px;border-top:1px solid #a1b7c2}.line.dashed{border-top-style:dashed}.controls{display:flex;align-items:center;gap:5px}.controls button{padding:6px 10px;border:1px solid var(--line);border-radius:5px;font-size:12px}.controls output{min-width:40px;text-align:center;font-size:10px;color:var(--muted)}.mobile{display:none}.small-note{font-size:10px!important;color:var(--muted)!important}
+@media(max-width:1000px){.app{grid-template-columns:270px minmax(0,1fr)}.edition{display:none}.toolbar{padding:16px}.toolbar h2{font-size:17px}.header-links{font-size:11px}.footer{padding:10px 14px}}
+@media(max-width:650px){.app{grid-template-columns:1fr;grid-template-rows:60px minmax(0,1fr)}header{padding:0 16px}.header-links a:last-child{display:none}aside{display:none;position:absolute;top:60px;bottom:0;left:0;width:min(320px,92vw);z-index:10;box-shadow:12px 0 40px #0008}.app.sidebar-open aside{display:block}.mobile{display:inline-block;border:1px solid var(--line);padding:7px 10px;border-radius:6px;font-size:11px}.toolbar{gap:10px}.toolbar h2{font-size:16px}.view-switch button{padding:7px 8px}.search{font-size:16px}.map-hint{font-size:9px;left:12px;right:12px}.controls{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-  <div id="app">
-    <div id="cy"></div>
-    <div id="panel">
-      <h3>Layout Style</h3>
-      <select id="layoutSelect" style="width:100%;padding:8px;margin-bottom:12px;font-size:13px">
-        <option value="breadthfirst" selected>🌳 Tree (Top-Down)</option>
-        <option value="dagre-TB">📊 Hierarchical (Vertical)</option>
-        <option value="dagre-LR">📊 Hierarchical (Horizontal)</option>
-      </select>
-      <div style="margin-bottom:12px">
-        <label style="font-size:12px;display:flex;align-items:center;cursor:pointer">
-          <input type="checkbox" id="toggleDashed" style="margin-right:8px">
-          Show cross-references
-        </label>
-        <small style="color:#666;font-size:10px;margin-left:24px">Keep unchecked for clean tree</small>
-      </div>
-
-      <h3>Controls</h3>
-      <div>
-        <button class="btn" id="fit">Fit</button>
-        <button class="btn" id="zoomIn">Zoom +</button>
-        <button class="btn" id="zoomOut">Zoom -</button>
-      </div>
-      <div style="margin-top:8px">
-        <button class="btn secondary" id="export">Export PNG</button>
-      </div>
-
-      <h3>Search / Actions</h3>
-      <input id="search" placeholder="Find node id or text" style="width:100%;padding:8px;margin-bottom:8px" />
-      <div style="font-size:13px;color:#444">
-        Drag nodes to reorganize. Click a node to focus. Double-click background to reset.
-      </div>
-
-      <h3>Legend</h3>
-      <div class="legend-item" style="background:#e1f5ff;border:2px solid #0077be">Paradigm</div>
-      <div class="legend-item" style="background:#fff4e1;border:2px solid #ff9800">Method</div>
-      <div class="legend-item" style="background:#f1f8e9;border:2px solid #689f38">Model</div>
-      <div class="legend-item" style="background:#fce4ec;border:2px solid #c2185b">Application</div>
-      <div class="legend-item" style="background:#f3e5f5;border:2px solid #7b1fa2">Foundation</div>
-      <div class="legend-item" style="background:#e8f5e9;border:2px solid #2e7d32">Flow</div>
-
-    </div>
-  </div>
-
-  <script>
-    const elements = {
-      nodes: [
-        { data: { id: 'A', label: '🤖 Artificial Intelligence (AI)\\nSystems that exhibit intelligent behavior', type:'paradigm'} },
-
-        { data: { id: 'B', label: '⚙️ Symbolic / Declarative AI\\nLogic, rules, planning, search', type:'paradigm'} },
-        { data: { id: 'C', label: '📊 Probabilistic AI\\nReasoning under uncertainty', type:'paradigm'} },
-        { data: { id: 'D', label: '🧩 Machine Learning (ML)\\nLearn patterns from data', type:'paradigm'} },
-
-        { data: { id: 'B1', label:'Logic (Propositional, FOL)', type:'method'} },
-        { data: { id: 'B2', label:'Ontologies / Knowledge Graphs', type:'method'} },
-        { data: { id: 'B3', label:'Planning (STRIPS, PDDL)', type:'method'} },
-        { data: { id: 'B4', label:'Search (A*, CSP, SAT)', type:'method'} },
-        { data: { id: 'B5', label:'Rule-based / Expert Systems', type:'method'} },
-
-        { data: { id: 'C1', label:'Bayesian Networks', type:'method'} },
-        { data: { id: 'C2', label:'Hidden Markov Models (HMMs)', type:'method'} },
-        { data: { id: 'C3', label:'Markov Decision Processes (MDPs)', type:'method'} },
-        { data: { id: 'C4', label:'Probabilistic Graphical Models (PGMs)', type:'method'} },
-
-        { data: { id: 'D1', label:'Supervised Learning', type:'method'} },
-        { data: { id: 'D2', label:'Unsupervised Learning', type:'method'} },
-        { data: { id: 'D3', label:'Self-Supervised Learning', type:'method'} },
-        { data: { id: 'D4', label:'Reinforcement Learning (RL)', type:'method'} },
-        { data: { id: 'D5', label:'Semi-Supervised Learning', type:'method'} },
-        { data: { id: 'D6', label:'Meta-Learning / Few-Shot Learning', type:'method'} },
-
-        { data: { id: 'D1a', label:'Linear / Logistic Regression', type:'model'} },
-        { data: { id: 'D1b', label:'Support Vector Machines (SVM)', type:'model'} },
-        { data: { id: 'D1c', label:'Decision Trees', type:'model'} },
-        { data: { id: 'D1d', label:'Random Forests / Gradient Boosting', type:'model'} },
-        { data: { id: 'D1e', label:'k-Nearest Neighbors (k-NN)', type:'model'} },
-        { data: { id: 'D1f', label:'Naive Bayes', type:'model'} },
-
-        { data: { id: 'D2a', label:'Clustering (k-Means, DBSCAN, Hierarchical)', type:'model'} },
-        { data: { id: 'D2b', label:'PCA / Dimensionality Reduction', type:'model'} },
-        { data: { id: 'D2c', label:'Autoencoders', type:'model'} },
-        { data: { id: 'D2d', label:'Anomaly Detection', type:'model'} },
-
-        { data: { id: 'E', label:'Neural Networks (NN)', type:'method'} },
-        { data: { id: 'E1', label:'Shallow Neural Networks\\n(Perceptrons, MLPs)', type:'model'} },
-        { data: { id: 'E2', label:'Deep Neural Networks (DNNs)\\nDeep Learning', type:'method'} },
-
-        { data: { id: 'F1', label:'Convolutional Neural Networks (CNNs)', type:'model'} },
-        { data: { id: 'F2', label:'Recurrent Neural Networks\\n(RNN / LSTM / GRU)', type:'model'} },
-        { data: { id: 'F3', label:'Transformers', type:'model'} },
-        { data: { id: 'F4', label:'Graph Neural Networks (GNNs)', type:'model'} },
-        { data: { id: 'F5', label:'Generative Models\\n(GANs, VAEs, Diffusion, Flows)', type:'model'} },
-
-        { data: { id: 'APP1', label:'Computer Vision\\n(Classification, Detection, Segmentation)', type:'application'} },
-        { data: { id: 'APP2', label:'Sequential Modeling\\n(Time Series, Speech Recognition)', type:'application'} },
-        { data: { id: 'APP3', label:'Language & Multimodal\\n(LLMs, VLMs, Code Gen, ViT)', type:'application'} },
-        { data: { id: 'APP4', label:'Graph-Based Tasks\\n(Molecular Design, Social Networks)', type:'application'} },
-        { data: { id: 'APP5', label:'Generative AI\\n(Image/Video/Audio Synthesis)', type:'application'} },
-
-        { data: { id: 'H1', label:'Model-Free RL', type:'method'} },
-        { data: { id: 'H2', label:'Model-Based RL', type:'method'} },
-        { data: { id: 'H3', label:'Multi-Agent RL', type:'method'} },
-
-        { data: { id: 'H1a', label:'Value-Based (Q-Learning, DQN)', type:'model'} },
-        { data: { id: 'H1b', label:'Policy-Based (REINFORCE, PPO)', type:'model'} },
-        { data: { id: 'H1c', label:'Actor-Critic (A3C, SAC)', type:'model'} },
-
-        { data: { id: 'H2a', label:'Planning with Models', type:'model'} },
-        { data: { id: 'H2b', label:'World Models', type:'model'} },
-
-        { data: { id: 'I1', label:'🎯 RLHF / DPO / Constitutional AI\\n(Alignment)', type:'foundation'} },
-        { data: { id: 'I2', label:'⚡ Optimization & Scaling\\n(SGD, Adam, Backprop, Quantization, MoE)', type:'foundation'} },
-        { data: { id: 'I3', label:'🔗 Neuro-Symbolic AI\\n(Hybrid reasoning)', type:'foundation'} },
-
-        { data: { id: 'FLOW1', label:'📐 Representation\\n(Symbols, Features, Embeddings)', type:'flow'} },
-        { data: { id: 'FLOW2', label:'🎲 Uncertainty\\n(Probability, Belief States)', type:'flow'} },
-        { data: { id: 'FLOW3', label:'🔄 Optimization\\n(Loss/Reward/Posterior)', type:'flow'} },
-        { data: { id: 'FLOW4', label:'🎯 Action/Decision\\n(Output, Policy, Inference)', type:'flow'} }
-      ],
-      edges: [
-        { data:{id:'A-B',source:'A',target:'B'} },
-        { data:{id:'A-C',source:'A',target:'C'} },
-        { data:{id:'A-D',source:'A',target:'D'} },
-
-        { data:{id:'B-B1',source:'B',target:'B1'} },
-        { data:{id:'B-B2',source:'B',target:'B2'} },
-        { data:{id:'B-B3',source:'B',target:'B3'} },
-        { data:{id:'B-B4',source:'B',target:'B4'} },
-        { data:{id:'B-B5',source:'B',target:'B5'} },
-
-        { data:{id:'C-C1',source:'C',target:'C1'} },
-        { data:{id:'C-C2',source:'C',target:'C2'} },
-        { data:{id:'C-C3',source:'C',target:'C3'} },
-        { data:{id:'C-C4',source:'C',target:'C4'} },
-
-        { data:{id:'D-D1',source:'D',target:'D1'} },
-        { data:{id:'D-D2',source:'D',target:'D2'} },
-        { data:{id:'D-D3',source:'D',target:'D3'} },
-        { data:{id:'D-D4',source:'D',target:'D4'} },
-        { data:{id:'D-D5',source:'D',target:'D5'} },
-        { data:{id:'D-D6',source:'D',target:'D6'} },
-
-        { data:{id:'D1-D1a',source:'D1',target:'D1a'} },
-        { data:{id:'D1-D1b',source:'D1',target:'D1b'} },
-        { data:{id:'D1-D1c',source:'D1',target:'D1c'} },
-        { data:{id:'D1-D1d',source:'D1',target:'D1d'} },
-        { data:{id:'D1-D1e',source:'D1',target:'D1e'} },
-        { data:{id:'D1-D1f',source:'D1',target:'D1f'} },
-
-        { data:{id:'D2-D2a',source:'D2',target:'D2a'} },
-        { data:{id:'D2-D2b',source:'D2',target:'D2b'} },
-        { data:{id:'D2-D2c',source:'D2',target:'D2c'} },
-        { data:{id:'D2-D2d',source:'D2',target:'D2d'} },
-
-        { data:{id:'D-E',source:'D',target:'E'} },
-
-        { data:{id:'E-E1',source:'E',target:'E1'} },
-        { data:{id:'E-E2',source:'E',target:'E2'} },
-
-        { data:{id:'E2-F1',source:'E2',target:'F1'} },
-        { data:{id:'E2-F2',source:'E2',target:'F2'} },
-        { data:{id:'E2-F3',source:'E2',target:'F3'} },
-        { data:{id:'E2-F4',source:'E2',target:'F4'} },
-        { data:{id:'E2-F5',source:'E2',target:'F5'} },
-
-        { data:{id:'F1-APP1',source:'F1',target:'APP1'} },
-        { data:{id:'F2-APP2',source:'F2',target:'APP2'} },
-        { data:{id:'F3-APP3',source:'F3',target:'APP3'} },
-        { data:{id:'F4-APP4',source:'F4',target:'APP4'} },
-        { data:{id:'F5-APP5',source:'F5',target:'APP5'} },
-
-        { data:{id:'D4-H1',source:'D4',target:'H1'} },
-        { data:{id:'D4-H2',source:'D4',target:'H2'} },
-        { data:{id:'D4-H3',source:'D4',target:'H3'} },
-
-        { data:{id:'H1-H1a',source:'H1',target:'H1a'} },
-        { data:{id:'H1-H1b',source:'H1',target:'H1b'} },
-        { data:{id:'H1-H1c',source:'H1',target:'H1c'} },
-
-        { data:{id:'H2-H2a',source:'H2',target:'H2a'} },
-        { data:{id:'H2-H2b',source:'H2',target:'H2b'} },
-
-        { data:{id:'I1-APP3',source:'APP3',target:'I1', label:'Aligned via'} },
-        { data:{id:'I1-H1b',source:'I1',target:'H1b'} },
-        { data:{id:'I1-H1c',source:'I1',target:'H1c'} },
-
-        { data:{id:'I2-D',source:'I2',target:'D'} },
-        { data:{id:'I2-E',source:'I2',target:'E'} },
-        { data:{id:'I2-E2',source:'I2',target:'E2'} },
-
-        { data:{id:'I3-B',source:'I3',target:'B'} },
-        { data:{id:'I3-E2',source:'I3',target:'E2'} },
-        { data:{id:'F4-I3',source:'F4',target:'I3'} },
-        { data:{id:'APP3-I3',source:'APP3',target:'I3'} },
-
-        { data:{id:'FLOW1-FLOW2',source:'FLOW1',target:'FLOW2'} },
-        { data:{id:'FLOW2-FLOW3',source:'FLOW2',target:'FLOW3'} },
-        { data:{id:'FLOW3-FLOW4',source:'FLOW3',target:'FLOW4'} },
-
-        // dashed / conceptual edges (style handled below)
-        { data:{id:'C4-C1',source:'C4',target:'C1', dashed:true, label:'Conceptual foundation'} },
-        { data:{id:'C4-C2',source:'C4',target:'C2', dashed:true, label:'Conceptual foundation'} },
-        { data:{id:'C4-C3',source:'C4',target:'C3', dashed:true, label:'Framework for'} },
-
-        { data:{id:'C1-D1a',source:'C1',target:'D1a', dashed:true, label:'Probabilistic inference'} },
-        { data:{id:'C1-F4',source:'C1',target:'F4', dashed:true, label:'Graphical structure influences'} },
-        { data:{id:'C2-F2',source:'C2',target:'F2', dashed:true, label:'Historical precursor to'} },
-        { data:{id:'C3-D4',source:'C3',target:'D4', dashed:true, label:'Formal framework for'} },
-        { data:{id:'C3-H1',source:'C3',target:'H1', dashed:true, label:'State-action dynamics'} },
-
-        { data:{id:'B2-F4',source:'B2',target:'F4', dashed:true, label:'Structure for'} },
-        { data:{id:'B2-APP3',source:'B2',target:'APP3', dashed:true, label:'Knowledge retrieval for'} },
-        { data:{id:'B3-D4',source:'B3',target:'D4', dashed:true, label:'Reward shaping in'} },
-        { data:{id:'B3-H2',source:'B3',target:'H2', dashed:true, label:'Goal-oriented'} },
-        { data:{id:'B4-H1a',source:'B4',target:'H1a', dashed:true, label:'Combined with'} },
-        { data:{id:'B4-H2',source:'B4',target:'H2', dashed:true, label:'MCTS + RL'} },
-
-        { data:{id:'E1-D1',source:'E1',target:'D1', dashed:true} },
-        { data:{id:'E1-D2',source:'E1',target:'D2', dashed:true} },
-        { data:{id:'E2-D1',source:'E2',target:'D1', dashed:true} },
-        { data:{id:'E2-D2',source:'E2',target:'D2', dashed:true} },
-        { data:{id:'E2-D3',source:'E2',target:'D3', dashed:true, label:'Enables'} },
-        { data:{id:'E2-D4',source:'E2',target:'D4', dashed:true, label:'Deep RL uses'} },
-
-        { data:{id:'D3-F3',source:'D3',target:'F3', dashed:true, label:'Pretraining for'} },
-        { data:{id:'D3-F1',source:'D3',target:'F1', dashed:true, label:'Contrastive methods for'} },
-        { data:{id:'D3-APP3',source:'D3',target:'APP3', dashed:true, label:'Masked modeling for'} },
-
-        { data:{id:'H1-E2',source:'H1',target:'E2', dashed:true, label:'Uses DNNs as approximators'} },
-        { data:{id:'H2-E2',source:'H2',target:'E2', dashed:true, label:'Uses DNNs for dynamics'} },
-        { data:{id:'H2-C3',source:'H2',target:'C3', dashed:true, label:'Grounded in'} },
-        { data:{id:'H2b-F5',source:'H2b',target:'F5', dashed:true, label:'Learned via'} },
-
-        { data:{id:'F5-APP3',source:'F5',target:'APP3', dashed:true, label:'Pretraining method for'} },
-        { data:{id:'F5-D2c',source:'F5',target:'D2c', dashed:true, label:'Extends autoencoders'} },
-
-        { data:{id:'F3-F5',source:'F3',target:'F5', dashed:true, label:'Diffusion Transformers (DiT)'} },
-
-        { data:{id:'F4-B2',source:'F4',target:'B2', dashed:true, label:'Operates on'} },
-
-        { data:{id:'D1f-C1',source:'D1f',target:'C1', dashed:true, label:'Probabilistic classifier'} },
-        { data:{id:'D2c-E2',source:'D2c',target:'E2', dashed:true, label:'Representation learning'} },
-
-        { data:{id:'D6-APP3',source:'D6',target:'APP3', dashed:true} },
-        { data:{id:'D6-E2',source:'D6',target:'E2', dashed:true} },
-        { data:{id:'D6-D4',source:'D6',target:'D4', dashed:true, label:'Adaptation in'} },
-
-        { data:{id:'I1-H1b_2',source:'I1',target:'H1b', dashed:true, label:'Uses policy optimization'} },
-        { data:{id:'I1-H1c_2',source:'I1',target:'H1c', dashed:true, label:'Direct preference'} },
-
-        { data:{id:'I2-D_2',source:'I2',target:'D', dashed:true, label:'Enables all gradient-based'} },
-        { data:{id:'I2-E_2',source:'I2',target:'E', dashed:true, label:'Training foundation'} },
-        { data:{id:'I2-E2_2',source:'I2',target:'E2', dashed:true, label:'Scales'} },
-        { data:{id:'I2-F3_2',source:'I2',target:'F3', dashed:true, label:'Efficient inference'} },
-
-        { data:{id:'I3-B2_2',source:'I3',target:'B2', dashed:true} },
-        { data:{id:'APP3-I3_2',source:'APP3',target:'I3', dashed:true, label:'Emerging in'} },
-
-        { data:{id:'FLOW1-B',source:'FLOW1',target:'B', dashed:true, label:'Contributes'} },
-        { data:{id:'FLOW2-C',source:'FLOW2',target:'C', dashed:true, label:'Contributes'} },
-        { data:{id:'FLOW3-D',source:'FLOW3',target:'D', dashed:true, label:'Contributes'} },
-        { data:{id:'FLOW3-E',source:'FLOW3',target:'E', dashed:true, label:'Contributes'} },
-        { data:{id:'FLOW4-D4',source:'FLOW4',target:'D4', dashed:true, label:'Contributes'} },
-        { data:{id:'FLOW4-I1',source:'FLOW4',target:'I1', dashed:true, label:'Shapes'} }
-      ]
-    };
-
-    const cy = cytoscape({
-      container: document.getElementById('cy'),
-      elements: [...elements.nodes.map(n=>({data:n.data})), ...elements.edges.map(e=>({data:e.data}))],
-      style: [
-        { selector: 'node', style: {
-          'label': 'data(label)',
-          'text-wrap': 'wrap',
-          'text-max-width': 160,
-          'font-size': 11,
-          'text-valign': 'center',
-          'text-halign': 'center',
-          'padding': '8px',
-          'background-color': '#fff',
-          'border-width': 2,
-          'border-color': '#888',
-          'shape': 'roundrectangle',
-          'width': 'label',
-          'height': 'label'
-        }},
-        { selector: "node[type='paradigm']", style:{ 'background-color':'#e1f5ff','border-color':'#0077be' }},
-        { selector: "node[type='method']", style:{ 'background-color':'#fff4e1','border-color':'#ff9800' }},
-        { selector: "node[type='model']", style:{ 'background-color':'#f1f8e9','border-color':'#689f38' }},
-        { selector: "node[type='application']", style:{ 'background-color':'#fce4ec','border-color':'#c2185b' }},
-        { selector: "node[type='foundation']", style:{ 'background-color':'#f3e5f5','border-color':'#7b1fa2' }},
-        { selector: "node[type='flow']", style:{ 'background-color':'#e8f5e9','border-color':'#2e7d32' }},
-
-        { selector: 'edge', style: {
-          'curve-style':'bezier',
-          'target-arrow-shape':'triangle',
-          'target-arrow-color':'#666',
-          'line-color':'#bbb',
-          'width': 2,
-          'label':'data(label)',
-          'font-size': 10,
-          'text-background-color':'#fff',
-          'text-background-opacity':0.9,
-          'text-background-padding': 2,
-          'text-rotation': 'autorotate'
-        }},
-        { selector: 'edge[?dashed]', style: { 'line-style':'dashed', 'target-arrow-shape':'none','line-color':'#999' } }
-      ],
-      layout: { 
-        name: 'breadthfirst',
-        directed: true,
-        spacingFactor: 1.75,
-        padding: 50,
-        avoidOverlap: true,
-        nodeDimensionsIncludeLabels: true
-      },
-      wheelSensitivity: 0.2
-    });
-
-    cy.on('tap', 'node', e=>{
-      const n = e.target;
-      cy.animate({ fit: { eles: n, padding: 60 }, duration: 400 });
-    });
-
-    document.getElementById('fit').onclick = ()=> cy.fit(40);
-    document.getElementById('zoomIn').onclick = ()=> cy.zoom({level: cy.zoom()*1.2, renderedPosition: {x: cy.width()/2, y: cy.height()/2}});
-    document.getElementById('zoomOut').onclick = ()=> cy.zoom({level: cy.zoom()*0.8, renderedPosition: {x: cy.width()/2, y: cy.height()/2}});
-    document.getElementById('export').onclick = ()=>{
-      const png = cy.png({full: true, scale:2});
-      const w = window.open('');
-      w.document.write("<img src='"+png+"' style='max-width:100%'>");
-    };
-
-    document.getElementById('search').addEventListener('input', e=>{
-      const q = e.target.value.toLowerCase().trim();
-      cy.nodes().forEach(n=>{
-        const matches = !q || (n.data('id') && n.data('id').toLowerCase().includes(q)) || (n.data('label') && n.data('label').toLowerCase().includes(q));
-        n.style('opacity', matches ? 1 : 0.18);
-      });
-      cy.edges().forEach(ed=> ed.style('opacity', q ? 0.18 : 1));
-    });
-
-    cy.on('tap', e=>{ if(e.target === cy) cy.animate({ fit: { padding: 30 }, duration: 500 }); });
-    cy.on('dragfree', 'node', ()=>{});
-    
-    // Hide dashed edges by default for clean tree structure
-    cy.edges('[?dashed]').style('display', 'none');
-    
-    // Layout switcher
-    document.getElementById('layoutSelect').addEventListener('change', e=>{
-      const layoutType = e.target.value;
-      let layoutConfig;
-      
-      if (layoutType === 'breadthfirst') {
-        layoutConfig = {
-          name: 'breadthfirst',
-          directed: true,
-          spacingFactor: 1.75,
-          padding: 50,
-          avoidOverlap: true,
-          nodeDimensionsIncludeLabels: true
-        };
-      } else if (layoutType === 'dagre-TB') {
-        layoutConfig = {
-          name: 'dagre',
-          rankDir: 'TB',
-          nodeSep: 120,
-          edgeSep: 40,
-          rankSep: 200,
-          ranker: 'network-simplex'
-        };
-      } else if (layoutType === 'dagre-LR') {
-        layoutConfig = {
-          name: 'dagre',
-          rankDir: 'LR',
-          nodeSep: 100,
-          edgeSep: 30,
-          rankSep: 180,
-          ranker: 'network-simplex'
-        };
-      }
-      
-      cy.layout(layoutConfig).run();
-      setTimeout(()=> cy.fit(40), 400);
-    });
-    
-    // Toggle cross-reference (dashed) edges
-    document.getElementById('toggleDashed').addEventListener('change', e=>{
-      const show = e.target.checked;
-      cy.edges('[?dashed]').style('display', show ? 'element' : 'none');
-    });
-    
-    cy.ready(()=> cy.fit(40));
-  </script>
+<div class="app" id="app">
+<header><div class="brand"><span class="mark" aria-hidden="true">✳</span><strong>AI Atlas</strong><span class="edition">THE CONNECTED EDITION</span></div><nav class="header-links"><a href="graph.html">Tree edition ↗</a><a href="ai_ml_map.md">Master map ↗</a></nav></header>
+<aside id="sidebar" aria-label="Knowledge explorer">
+ <div class="eyebrow">Ideas do not grow in straight lines</div><h1>A field of<br>connections.</h1><p class="intro">Explore what belongs where, what builds on what, and how different ideas come together.</p>
+ <input type="search" class="search" id="search" placeholder="Find a concept…  /" aria-label="Search concepts and descriptions">
+ <div id="results"></div>
+ <div id="explorer"><div class="section-title">Explore a region <button id="reset">Reset</button></div><div id="groups"></div>
+ <div class="section-title">Follow an idea</div><div id="routes"></div></div>
+ <section class="selection" id="selection" aria-live="polite"></section>
+ <details class="sources"><summary>How to read this map & sources</summary><p>This is a curated conceptual map, not an exhaustive taxonomy. Regions are lenses, not exclusive categories. Arrows read from source to target; dashed lines cross conceptual regions. “Can” and “often” indicate possible or typical relationships, not requirements.</p><p>Foundational references for selected connections:</p><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener">scikit-learn · Learning methods ↗</a><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Attention Is All You Need ↗</a><a href="https://arxiv.org/abs/2108.07258" target="_blank" rel="noopener">On Foundation Models ↗</a><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Retrieval-Augmented Generation ↗</a><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">Direct Preference Optimization ↗</a></details>
+</aside>
+<main><div class="toolbar"><div><h2 id="view-title">The whole field, woven together.</h2><p id="view-subtitle">Select a concept to illuminate its connections.</p></div><button class="mobile" id="menu" aria-expanded="false" aria-controls="sidebar">☰ Explore</button><div class="view-switch" aria-label="Map view"><button id="full" aria-pressed="true">Full network</button><button id="local" aria-pressed="false">Local view</button></div></div>
+<div class="map" id="map" aria-label="AI and machine learning relationship map"><div class="world" id="world"><div id="regions"></div><svg class="wires" id="wires" aria-hidden="true"></svg><div id="nodes"></div></div><div class="map-status" id="status"></div><div class="map-hint">Click a concept · Drag nodes to rearrange · Drag background to pan · Scroll or pinch to zoom</div></div>
+<footer class="footer"><div class="legend"><span><i class="line"></i>Within a region</span><span><i class="line dashed"></i>Across regions</span><span>→ Directed relationship</span></div><div class="controls"><button id="clear" title="Clear highlights">Clear</button><button id="minus" aria-label="Zoom out">−</button><output id="zoom">100%</output><button id="plus" aria-label="Zoom in">+</button><button id="fit">Fit</button><button id="export">Save SVG ↓</button></div></footer></main>
+</div>
+<script>
+'use strict';
+// Curated nodes: [id, label, definition, optional distinction]. Regions are not an ontology.
+const GROUPS=[
+['foundations','Foundations','#b7bfdf',0,0,[
+ ['math','Mathematics','The language used to describe models, uncertainty, and optimization.'],
+ ['linear','Linear algebra','Vectors, matrices, tensors, and transformations underpin numerical representations.'],
+ ['calculus','Calculus','Derivatives describe how changes in parameters affect an objective.'],
+ ['probability','Probability & statistics','Represent uncertainty, estimate quantities, and learn from samples.'],
+ ['optimization','Optimization','Choose parameters or decisions to improve an objective under constraints.'],
+ ['information','Information theory','Entropy, cross-entropy, and divergence quantify information and distribution differences.'],
+ ['algorithms','Algorithms & computation','Data structures, complexity, and numerical methods make AI procedures executable.']]],
+['learning','AI & learning','#9de0c4',1,0,[
+ ['ai','Artificial intelligence','The broad field of building systems for tasks involving perception, reasoning, learning, and action.','AI includes learning-based, symbolic, probabilistic, and hybrid approaches.'],
+ ['ml','Machine learning','Methods that improve task performance by learning patterns or behavior from data or experience.','Learning paradigm, model architecture, and application domain are different axes.'],
+ ['supervised','Supervised learning','Learn from examples with target labels or outputs.'],
+ ['unsupervised','Unsupervised learning','Find structure in data without supplied task labels.'],
+ ['selfsupervised','Self-supervised learning','Construct training targets from the data itself, such as masked or next-token prediction.','Usually treated as a form of unsupervised learning; the training objective still supplies targets.'],
+ ['semisupervised','Semi-supervised learning','Combine a smaller labeled dataset with additional unlabeled data.'],
+ ['transfer','Transfer learning','Reuse knowledge learned on one task or dataset for another.'],
+ ['active','Active learning','Select which examples should be labeled to use annotation effort efficiently.']]],
+['training','Training & adaptation','#e7bd82',2,0,[
+ ['pretrain','Pretraining','Learn reusable parameters from a broad training corpus before task-specific adaptation.'],
+ ['finetune','Fine-tuning','Update a pretrained model using additional task or domain data.'],
+ ['sft','Supervised fine-tuning','Fine-tune on examples of desired inputs and outputs, including instruction-response pairs.'],
+ ['lora','LoRA / adapters','Adapt models using a limited set of trainable parameters.'],
+ ['rlhf','RLHF','Use human feedback to shape a reward signal and optimize model behavior with reinforcement learning.'],
+ ['dpo','DPO','Train on preference pairs using a direct optimization objective.','DPO is an alternative to an explicit reward-model-plus-RL training loop.'],
+ ['backprop','Backpropagation','Efficiently compute parameter gradients through a differentiable computation graph.'],
+ ['gradient','Gradient-based learning','Update parameters using gradients; SGD and Adam are common optimizers.']]],
+['systems','Systems & agents','#90cce0',3,0,[
+ ['agents','AI agents','Systems that select actions and interact with an environment to pursue goals.','An agent is a system, not a synonym for an LLM. Agents can be symbolic, learned, or hybrid.'],
+ ['rag','Retrieval-augmented generation','Condition generation on information retrieved from an external collection.','RAG changes the context available to generation; it need not change model weights.'],
+ ['retrieval','Information retrieval','Find relevant documents or items using lexical, vector, or hybrid search.'],
+ ['tools','Tool use','Invoke external functions, APIs, or software to obtain information or take actions.'],
+ ['memory','State & memory','Maintain task state and retain information across system interactions.'],
+ ['orchestration','Workflow orchestration','Coordinate steps, models, tools, retries, and human handoffs.'],
+ ['kg','Knowledge graphs','Represent entities and relationships explicitly for querying and reasoning.'],
+ ['vector','Vector indexes','Index vector representations for similarity search.']]],
+['symbolic','Reasoning & search','#d7aa91',0,1,[
+ ['symbolic','Symbolic AI','Represent knowledge with explicit symbols, rules, and structures.'],
+ ['logic','Logic & reasoning','Derive conclusions from premises using formal rules.'],
+ ['search','Search','Explore candidate states or solutions, often using heuristics.'],
+ ['planning','Planning','Choose sequences of actions to achieve goals, often using a model of state transitions.'],
+ ['constraints','Constraint solving','Find assignments satisfying constraints; includes CSP and SAT methods.'],
+ ['expert','Expert systems','Use encoded domain knowledge and rules to support decisions.'],
+ ['neurosymbolic','Neuro-symbolic AI','Combine learned representations with explicit symbolic structure or reasoning.']]],
+['architectures','Models & architectures','#b5a2e0',1,1,[
+ ['deep','Deep learning','Learn with neural networks containing multiple layers of representation.','Deep learning is a family of ML methods; it can use many learning paradigms.'],
+ ['nn','Neural networks','Parameterized networks of units that transform inputs into outputs.'],
+ ['transformer','Transformers','Neural architectures built around attention and feed-forward processing.','Transformers are used beyond language, including vision, audio, and control.'],
+ ['attention','Attention','Weight and combine information according to relationships between queries, keys, and values.'],
+ ['cnn','Convolutional networks','Use shared local filters to capture structure in grids such as images.'],
+ ['rnn','Recurrent networks','Process sequential inputs with a recurrent hidden state; includes LSTM and GRU.'],
+ ['gnn','Graph neural networks','Compute representations from graph structure and node or edge features.'],
+ ['classical','Classical ML models','Families including linear models, decision trees, kernels, and nearest-neighbor methods.']]],
+['generation','Representations & generation','#df9dbd',2,1,[
+ ['generative','Generative modeling','Model data distributions to generate or explain observations.','Generative AI spans several model families and is not limited to LLMs.'],
+ ['llm','Large language models','Large-scale models that learn patterns in language and support language tasks.','Many modern LLMs use transformers; scale and language focus do not define an agent.'],
+ ['foundation','Foundation models','Broadly pretrained models designed for adaptation to many downstream tasks.','This is a role and training regime, not a single architecture or modality.'],
+ ['embeddings','Embeddings','Vector representations encoding useful properties of tokens, images, entities, or other inputs.'],
+ ['diffusion','Diffusion models','Generate through a learned process that reverses progressive corruption of data.'],
+ ['gan','GANs','Train a generator and discriminator through an adversarial objective.'],
+ ['vae','Variational autoencoders','Latent-variable generative models learned with a variational objective.'],
+ ['autoregressive','Autoregressive models','Factor a sequence distribution into conditional predictions of successive elements.']]],
+['applications','Tasks & modalities','#91c8ad',3,1,[
+ ['nlp','Language / NLP','Analyze and generate language: classification, translation, extraction, and more.'],
+ ['vision','Computer vision','Interpret visual inputs, including recognition, detection, and segmentation.'],
+ ['audio','Speech & audio','Recognize, understand, and generate speech and other sound.'],
+ ['multimodal','Multimodal AI','Combine information from more than one modality, such as text, images, and audio.'],
+ ['robotics','Robotics','Integrate sensing, state estimation, planning, and control in physical systems.'],
+ ['recommend','Recommendation','Rank and select items or actions relevant to a user or context.'],
+ ['forecast','Forecasting','Predict future values from past observations and other information.'],
+ ['science','AI for science','Use AI for scientific prediction, discovery, simulation, and design.']]],
+['uncertainty','Uncertainty & causality','#91b4d8',0,2,[
+ ['probai','Probabilistic AI','Represent uncertain quantities and reason with probability distributions.'],
+ ['bayes','Bayesian inference','Update beliefs using evidence through a probabilistic model.'],
+ ['graphical','Graphical models','Represent dependency structure among random variables with graphs.'],
+ ['causal','Causal inference','Estimate effects of interventions under explicit causal assumptions.','Predictive correlation alone does not identify causal effects.'],
+ ['latent','Latent-variable models','Use unobserved variables to explain observed data.'],
+ ['sampling','Sampling & inference','Approximate expectations or distributions using methods such as Monte Carlo and MCMC.']]],
+['decisions','Decisions & interaction','#d5c786',1,2,[
+ ['rl','Reinforcement learning','Learn policies from interaction or recorded experience using reward signals.','RL is a learning paradigm; it does not require deep neural networks.'],
+ ['mdp','Markov decision processes','Model sequential decisions with states, actions, transitions, and rewards.'],
+ ['policy','Policies & value functions','Policies choose actions; value functions estimate expected future returns.'],
+ ['deeprl','Deep reinforcement learning','Use deep networks to represent policies, values, or models in RL.'],
+ ['world','World models','Predict aspects of environment dynamics to support reasoning or planning.'],
+ ['multiagent','Multi-agent systems','Study multiple interacting agents, including cooperation and competition.'],
+ ['evolution','Evolutionary methods','Search over candidate solutions using variation and selection.'],
+ ['control','Control theory','Design feedback policies to regulate dynamical systems.']]],
+['engineering','Data & engineering','#a0c4b6',2,2,[
+ ['data','Data engineering','Collect, clean, label, version, and organize data for training and evaluation.'],
+ ['evaluation','Evaluation','Measure model or system performance with suitable tasks, metrics, and test data.'],
+ ['generalization','Generalization','How well learned behavior transfers beyond training examples.'],
+ ['regularization','Regularization','Constrain or bias learning to improve generalization and reduce overfitting.'],
+ ['inference','Model inference','Run a trained model to produce outputs for new inputs.','Model inference means execution; statistical inference means drawing conclusions from data.'],
+ ['compression','Model compression','Reduce model cost through quantization, pruning, or distillation.'],
+ ['mlops','MLOps & deployment','Version, deploy, serve, observe, and maintain ML systems.'],
+ ['monitoring','Monitoring & drift','Track production performance and changes in data or behavior.']]],
+['trust','Understanding & trust','#c6a5ae',3,2,[
+ ['interpret','Interpretability','Investigate model behavior, learned representations, and internal mechanisms.'],
+ ['alignment','Alignment','Seek model or system behavior consistent with intended goals and constraints.'],
+ ['safety','Safety & robustness','Evaluate and reduce harmful or unreliable behavior under real-world conditions.'],
+ ['security','AI security','Protect models, data, and applications from adversarial manipulation.'],
+ ['privacy','Privacy','Limit the exposure or misuse of information about individuals or sensitive records.'],
+ ['fairness','Fairness & governance','Examine impacts across groups and define accountability, policy, and oversight.']]]
+];
+// Edges are statements: source — relationship → target. No implicit inheritance.
+const EDGE_TEXT=`
+math|underpins|linear
+math|underpins|calculus
+math|underpins|probability
+math|underpins|optimization
+probability|supports|information
+algorithms|enables computation in|ai
+ai|includes|ml
+ai|includes|symbolic
+ai|includes|probai
+ai|includes|planning
+ai|includes|multiagent
+ai|includes|evolution
+ai|is applied in|robotics
+ml|includes|supervised
+ml|includes|unsupervised
+ml|includes|semisupervised
+ml|includes|rl
+ml|includes|deep
+ml|uses|classical
+ml|can use|active
+ml|can reuse knowledge through|transfer
+unsupervised|includes|selfsupervised
+supervised|uses labels from|data
+semisupervised|combines labeled and unlabeled|data
+active|selects examples for labeling in|data
+transfer|can use|finetune
+classical|can be trained with|supervised
+classical|can be trained with|unsupervised
+classical|can support|forecast
+classical|can support|recommend
+symbolic|uses|logic
+symbolic|uses|search
+symbolic|uses|constraints
+symbolic|includes|expert
+expert|uses|logic
+planning|often uses|search
+planning|can use|constraints
+kg|can support|logic
+neurosymbolic|combines with learned models|symbolic
+neurosymbolic|can use|nn
+probai|uses|bayes
+probai|uses|graphical
+probai|uses|sampling
+graphical|can encode|latent
+bayes|uses|probability
+bayes|can be approximated with|sampling
+causal|can use|graphical
+causal|helps assess interventions in|science
+causal|can inform|fairness
+deep|uses multilayer|nn
+nn|includes architecture family|transformer
+nn|includes architecture family|cnn
+nn|includes architecture family|rnn
+nn|includes architecture family|gnn
+transformer|uses|attention
+transformer|can process|vision
+transformer|can process|audio
+transformer|can support|multimodal
+transformer|can implement|world
+cnn|often supports|vision
+rnn|can support|forecast
+rnn|can support|nlp
+gnn|can learn from|kg
+gnn|can support|science
+nn|can learn|embeddings
+embeddings|use vector spaces from|linear
+deep|can use|supervised
+deep|can use|selfsupervised
+deep|can be combined with|rl
+nn|is often trained using|backprop
+backprop|applies chain rule from|calculus
+backprop|supplies gradients for|gradient
+gradient|is a form of|optimization
+gradient|updates parameters during|pretrain
+gradient|updates parameters during|finetune
+regularization|aims to improve|generalization
+evaluation|estimates|generalization
+ml|requires attention to|generalization
+pretrain|often uses|selfsupervised
+pretrain|learns from|data
+pretrain|can produce|foundation
+foundation|can be adapted with|finetune
+finetune|includes|sft
+finetune|can use|lora
+sft|uses|supervised
+llm|can be post-trained with|rlhf
+llm|can be post-trained with|dpo
+rlhf|uses|rl
+rlhf|aims to improve|alignment
+dpo|aims to improve|alignment
+generative|includes|diffusion
+generative|includes|gan
+generative|includes|vae
+generative|includes|autoregressive
+vae|is a family of|latent
+vae|uses approximate posterior inference from|probai
+diffusion|often uses|nn
+diffusion|can use|transformer
+gan|uses competing|nn
+autoregressive|can be implemented with|rnn
+llm|often uses|transformer
+llm|often uses|autoregressive
+llm|can serve as|foundation
+llm|supports|nlp
+foundation|can support|vision
+foundation|can support|audio
+foundation|can be|multimodal
+autoregressive|often generates using|sampling
+generative|can generate content for|audio
+generative|can generate visual content for|vision
+information|provides common loss functions for|generative
+nlp|can use|embeddings
+recommend|can use|embeddings
+retrieval|can use|embeddings
+vector|indexes|embeddings
+retrieval|can use|vector
+rag|combines generation with|retrieval
+rag|often uses|llm
+rag|can retrieve from|kg
+agents|can use|llm
+agents|can use|planning
+agents|can use|tools
+agents|can use|memory
+agents|can use|rag
+agents|can be coordinated by|orchestration
+agents|can act through|robotics
+orchestration|coordinates|tools
+multiagent|studies interacting|agents
+rl|often formalizes tasks with|mdp
+rl|learns|policy
+rl|includes|deeprl
+deeprl|uses|deep
+mdp|defines transitions and rewards for|policy
+world|can support|planning
+world|can support model-based|rl
+rl|can be used for|control
+control|supports|robotics
+robotics|often uses|vision
+robotics|uses|planning
+robotics|can use|rl
+multiagent|can use|rl
+evolution|is a family of|optimization
+optimization|supports|control
+probai|can support state estimation in|robotics
+data|feeds|pretrain
+data|feeds|evaluation
+evaluation|measures behavior of|agents
+evaluation|measures behavior of|llm
+inference|runs trained|nn
+compression|can reduce cost of|inference
+mlops|operationalizes|inference
+mlops|includes|monitoring
+monitoring|can trigger new|evaluation
+mlops|manages|data
+interpret|investigates|nn
+interpret|can inform|safety
+safety|requires|evaluation
+security|protects|agents
+security|protects|data
+privacy|constrains use of|data
+fairness|informs|evaluation
+alignment|is assessed through|evaluation
+tools|introduces attack surfaces studied by|security
+rag|introduces attack surfaces studied by|security
+multimodal|can integrate|nlp
+multimodal|can integrate|vision
+multimodal|can integrate|audio
+science|can use|generative
+forecast|can use|probai
+`;
+const ROUTES=[
+ {id:'language',title:'From learning to language',sub:'ML → deep learning → transformers → LLMs',nodes:['ai','ml','deep','nn','transformer','llm','nlp']},
+ {id:'agent',title:'From a model to a system',sub:'LLMs, retrieval, tools, memory, and agents',nodes:['llm','rag','retrieval','embeddings','vector','agents','tools','memory','planning']},
+ {id:'acting',title:'From learning to action',sub:'Rewards, policies, world models, and robots',nodes:['ml','rl','mdp','policy','deeprl','deep','world','planning','robotics','control']},
+ {id:'beyond',title:'Beyond neural networks',sub:'Symbols, uncertainty, search, and constraints',nodes:['ai','symbolic','logic','search','planning','constraints','expert','probai','bayes','graphical','causal']}
+];
+// UI and graph rendering follow below.
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+const nodes=[],groups=[],byId=new Map();
+GROUPS.forEach(([id,label,color,col,row,entries])=>{
+ const group={id,label,color,x:col*450,y:row*390,w:410,h:350,ids:[]};groups.push(group);
+ entries.forEach(([id,label,description,note],i)=>{
+  const n={id,label,description,note,group,hub:i===0,x:group.x+105+(i%2)*200,y:group.y+87+Math.floor(i/2)*69};
+  group.ids.push(id);nodes.push(n);byId.set(id,n);
+ });
+});
+const edges=EDGE_TEXT.trim().split('\n').map((line,i)=>{const [source,label,target]=line.split('|');if(!byId.has(source)||!byId.has(target))throw Error('Unknown endpoint: '+line);return {id:'edge-'+i,source,label,target,cross:byId.get(source).group!==byId.get(target).group}});
+const adjacency=new Map(nodes.map(n=>[n.id,[]]));edges.forEach(e=>{adjacency.get(e.source).push(e);adjacency.get(e.target).push(e)});
+let selected=null,mode='full',route=null,region=null,scale=1,tx=0,ty=0,positions=new Map(),visible=[],visibleEdges=[],drag=null,moved=false;
+const homePositions=new Map(nodes.map(n=>[n.id,{x:n.x,y:n.y}]));
+function el(tag,cls,text){const item=document.createElement(tag);if(cls)item.className=cls;if(text!==undefined)item.textContent=text;return item}
+function svg(tag,attrs={}){const item=document.createElementNS(NS,tag);for(const [key,value] of Object.entries(attrs))item.setAttribute(key,value);return item}
+function neighbors(id){return new Set([id,...adjacency.get(id).map(e=>e.source===id?e.target:e.source)])}
+function displayIds(){if(route)return new Set(route.nodes);if(mode==='local'&&selected)return neighbors(selected);return new Set(nodes.map(n=>n.id))}
+function selectNode(id,{focus=false}={}){
+ if(!byId.has(id))return;selected=id;region=null;
+ // A route remains visible when selecting one of its nodes; following an external relationship exits it.
+ if(route&&!route.nodes.includes(id))route=null;
+ render();if(focus||mode==='local')fit();
+ history.replaceState(null,'','#'+id);
+ if(matchMedia('(max-width:650px)').matches){$('app').classList.add('sidebar-open');$('menu').setAttribute('aria-expanded','true')}
+ $('selection').scrollIntoView({block:'nearest',behavior:'auto'});
+}
+function reset(){selected=null;region=null;route=null;mode='full';nodes.forEach(n=>homePositions.set(n.id,{x:n.x,y:n.y}));history.replaceState(null,'',location.pathname+location.search);$('search').value='';renderSearch();render();fit()}
+function renderSidebar(){
+ $('groups').replaceChildren();groups.forEach(g=>{const b=el('button','group-button');b.style.setProperty('--c',g.color);b.append(el('span','swatch'),document.createTextNode(g.label),el('small','',g.ids.length));b.onclick=()=>{region=g.id;selected=null;route=null;mode='full';render();fit(g.ids)};$('groups').append(b)});
+ $('routes').replaceChildren();ROUTES.forEach(r=>{const b=el('button','route',r.title);b.append(el('span','',r.sub));b.setAttribute('aria-pressed',route===r);b.onclick=()=>{route=r;selected=null;region=null;mode='full';render();fit();closeMobile()};$('routes').append(b)});
+ const panel=$('selection');panel.replaceChildren();
+ if(selected){
+  const n=byId.get(selected);panel.append(el('div','eyebrow',n.group.label),el('h2','',n.label),el('p','',n.description));if(n.note)panel.append(el('p','note',n.note));
+  const b=el('button','primary',mode==='local'?'Show in full network ↗':'Isolate its connections ↗');b.onclick=()=>{mode=mode==='local'?'full':'local';route=null;region=null;render();fit();closeMobile()};panel.append(b);
+  panel.append(el('div','section-title',adjacency.get(selected).length+' direct connections'));
+  adjacency.get(selected).forEach(e=>{const other=e.source===selected?e.target:e.source;const b=el('button','relation');b.append(el('strong','',byId.get(e.source).label+' '),el('em','',e.label+' → '),el('strong','',byId.get(e.target).label));b.setAttribute('aria-label',byId.get(e.source).label+' '+e.label+' '+byId.get(e.target).label+'. Explore '+byId.get(other).label);b.onclick=()=>selectNode(other,{focus:mode==='local'});panel.append(b)});
+ }else if(route){panel.append(el('div','eyebrow','Guided connection trail'),el('h2','',route.title),el('p','',route.sub),el('p','note','Follow the arrow labels. This is a network of relationships, not a sequence of required prerequisites.'));route.nodes.forEach(id=>{const b=el('button','result',byId.get(id).label);b.onclick=()=>selectNode(id);panel.append(b)})}
+ else if(region){const g=groups.find(g=>g.id===region);panel.append(el('div','eyebrow','Explore this region'),el('h2','',g.label));g.ids.forEach(id=>{const b=el('button','result',byId.get(id).label);b.onclick=()=>selectNode(id);panel.append(b)})}
+ else{panel.append(el('div','eyebrow','Read the connections'),el('h2','','Many axes. One field.'),el('p','','A model can be a transformer, trained with self-supervision, applied to vision, and deployed inside an agent. Those are different descriptions of the same system.'),el('p','note','Start with a region or a guided trail. Select any concept to read every incoming and outgoing relationship.'))}
+}
+function renderSearch(){const query=$('search').value.trim().toLowerCase();$('results').replaceChildren();$('explorer').hidden=!!query;if(!query)return;const matches=nodes.filter(n=>(n.label+' '+n.description+' '+n.id).toLowerCase().includes(query));$('results').append(el('div','section-title',matches.length+' matching concepts'));matches.forEach(n=>{const b=el('button','result',n.label);b.append(el('small','',n.group.label));b.onclick=()=>{mode='local';route=null;selectNode(n.id,{focus:true});closeMobile()};$('results').append(b)});if(!matches.length)$('results').append(el('p','no-result','No matches. Try “transformer”, “reward”, or “symbolic”.'))}
+function layout(){
+ const ids=displayIds();visible=nodes.filter(n=>ids.has(n.id));visibleEdges=edges.filter(e=>ids.has(e.source)&&ids.has(e.target));positions=new Map();
+ if(route){route.nodes.forEach((id,i)=>positions.set(id,{x:130+(i%3)*320,y:100+Math.floor(i/3)*150}))}
+ else if(mode==='local'&&selected){const other=visible.filter(n=>n.id!==selected),half=Math.ceil(other.length/2),height=Math.max(360,half*80);positions.set(selected,{x:460,y:height/2});other.forEach((n,i)=>{const left=i<half,ix=left?i:i-half,count=left?half:other.length-half;positions.set(n.id,{x:left?130:790,y:height/2+(ix-(count-1)/2)*80})})}
+ else visible.forEach(n=>positions.set(n.id,{...homePositions.get(n.id)}));
+}
+function render(){
+ layout();renderSidebar();$('regions').replaceChildren();$('nodes').replaceChildren();
+ if(mode==='full'&&!route)groups.forEach(g=>{const box=el('div','region');box.style.cssText=`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px;--c:${g.color}`;box.append(el('div','region-title',g.label));$('regions').append(box)});
+ const related=selected?neighbors(selected):null;
+ visible.forEach(n=>{const p=positions.get(n.id),b=el('button','node'+(n.hub?' hub':'')+(selected===n.id?' selected':'')+(related&&!related.has(n.id)?' faint':'')+(related&&related.has(n.id)&&n.id!==selected?' neighbor':''));b.style.cssText=`left:${p.x}px;top:${p.y}px;--c:${n.group.color}`;b.dataset.id=n.id;b.append(el('span','dot'),el('span','',n.label));b.setAttribute('aria-label',n.label+'. '+adjacency.get(n.id).length+' connections');b.setAttribute('aria-pressed',selected===n.id);b.onclick=e=>{if(e.detail===0||!moved)selectNode(n.id)};$('nodes').append(b)});
+ drawEdges();$('full').setAttribute('aria-pressed',mode==='full');$('local').setAttribute('aria-pressed',mode==='local');
+ $('view-title').textContent=route?route.title:mode==='local'?byId.get(selected).label+' & its connections':region?groups.find(g=>g.id===region).label:'The whole field, woven together.';
+ $('view-subtitle').textContent=selected?'Highlighted arrows show relationships with '+byId.get(selected).label+'.':route?'A guided slice of the field. Every arrow is a statement.':'Select a concept to illuminate its connections.';
+ $('status').textContent=visible.length+' concepts / '+visibleEdges.length+' relationships'+(mode==='local'?' / local view':'');
+}
+function geometry(e){const a=positions.get(e.source),b=positions.get(e.target);const dx=b.x-a.x,dy=b.y-a.y;
+ // Intersect the center-to-center vector with each card boundary.
+ const sourceScale=Math.min(88/Math.max(Math.abs(dx),.01),31/Math.max(Math.abs(dy),.01));
+ const targetScale=Math.min(90/Math.max(Math.abs(dx),.01),33/Math.max(Math.abs(dy),.01));
+ const sx=a.x+dx*sourceScale,sy=a.y+dy*sourceScale,ex=b.x-dx*targetScale,ey=b.y-dy*targetScale;
+ const bend=Math.min(65,Math.hypot(dx,dy)*.08)*(e.id.split('-')[1]%2?1:-1),length=Math.max(1,Math.hypot(dx,dy));
+ const cx=(sx+ex)/2-dy/length*bend,cy=(sy+ey)/2+dx/length*bend;
+ return {d:`M${sx},${sy} Q${cx},${cy} ${ex},${ey}`,x:(sx+2*cx+ex)/4,y:(sy+2*cy+ey)/4-7};
+}
+function drawEdges(){
+ const wires=$('wires');wires.replaceChildren();const defs=svg('defs');
+ for(const [id,color] of [['arrow','#77939e'],['arrow-hot','#b4e5d0']]){const marker=svg('marker',{id,viewBox:'0 0 8 8',refX:7,refY:4,markerWidth:6,markerHeight:6,orient:'auto-start-reverse',markerUnits:'userSpaceOnUse'});marker.append(svg('path',{d:'M0 0 L8 4 L0 8 z',fill:color}));defs.append(marker)}wires.append(defs);
+ const sorted=[...visibleEdges].sort((a,b)=>Number(a.source===selected||a.target===selected)-Number(b.source===selected||b.target===selected));
+ sorted.forEach(e=>{const hot=e.source===selected||e.target===selected||!!route,geo=geometry(e);const path=svg('path',{d:geo.d,class:'wire'+(e.cross?' cross':'')+(hot?' hot':selected?' faint':''),'marker-end':`url(#${hot?'arrow-hot':'arrow'})`});const title=svg('title');title.textContent=byId.get(e.source).label+' '+e.label+' '+byId.get(e.target).label;path.append(title);wires.append(path);
+ if(hot){const label=svg('text',{x:geo.x,y:geo.y,class:'edge-label'});label.textContent=e.label;wires.append(label)}});
+}
+function bounds(ids=visible.map(n=>n.id)){const points=ids.map(id=>positions.get(id)).filter(Boolean);if(!points.length)return {x:0,y:0,w:1,h:1};const xs=points.map(p=>p.x),ys=points.map(p=>p.y);return {x:Math.min(...xs)-115,y:Math.min(...ys)-70,w:Math.max(...xs)-Math.min(...xs)+230,h:Math.max(...ys)-Math.min(...ys)+140}}
+function fit(ids){const b=bounds(ids),r=$('map').getBoundingClientRect();scale=Math.max(.15,Math.min((r.width-45)/b.w,(r.height-70)/b.h,1.45));tx=(r.width-b.w*scale)/2-b.x*scale;ty=(r.height-b.h*scale)/2-b.y*scale;transform()}
+function transform(){$('world').style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;$('zoom').textContent=Math.round(scale*100)+'%'}
+function zoom(factor,x=$('map').clientWidth/2,y=$('map').clientHeight/2){const next=Math.min(3,Math.max(.15,scale*factor));tx=x-(x-tx)*next/scale;ty=y-(y-ty)*next/scale;scale=next;transform()}
+function closeMobile(){$('app').classList.remove('sidebar-open');$('menu').setAttribute('aria-expanded','false')}
+$('search').addEventListener('input',renderSearch);$('search').addEventListener('keydown',e=>{if(e.key==='Enter'){const first=$('results').querySelector('button');if(first)first.click()}});
+$('reset').onclick=reset;$('clear').onclick=()=>{selected=null;region=null;route=null;mode='full';render();fit();history.replaceState(null,'',location.pathname+location.search)};
+$('full').onclick=()=>{mode='full';route=null;render();fit()};$('local').onclick=()=>{mode='local';selected=selected||'ml';route=null;region=null;render();fit()};
+$('fit').onclick=()=>fit(region?groups.find(g=>g.id===region).ids:undefined);$('plus').onclick=()=>zoom(1.25);$('minus').onclick=()=>zoom(.8);
+$('menu').onclick=()=>{const open=$('app').classList.toggle('sidebar-open');$('menu').setAttribute('aria-expanded',open)};
+const close=el('button','mobile','Close explorer ×');close.onclick=closeMobile;$('sidebar').prepend(close);
+$('map').addEventListener('wheel',e=>{e.preventDefault();const r=$('map').getBoundingClientRect();zoom(Math.exp(-e.deltaY*.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+const pointers=new Map();let pinch=null;
+$('map').addEventListener('pointerdown',e=>{if(e.button!==0)return;const n=e.target.closest('.node');pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;drag={x:e.clientX,y:e.clientY,tx,ty,id:n?.dataset.id};if(n){drag.px=positions.get(drag.id).x;drag.py=positions.get(drag.id).y}else $('map').setPointerCapture(e.pointerId);if(pointers.size===2){const [a,b]=[...pointers.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y);drag.id=null}});
+$('map').addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId)||!drag)return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>5)moved=true;if(!moved)return;$('map').classList.add('dragging');
+ if(pointers.size===2){const [a,b]=[...pointers.values()],distance=Math.hypot(a.x-b.x,a.y-b.y),r=$('map').getBoundingClientRect();if(pinch)zoom(distance/pinch,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);pinch=distance}
+ else if(drag.id){$('map').setPointerCapture(e.pointerId);const p={x:drag.px+dx/scale,y:drag.py+dy/scale};positions.set(drag.id,p);if(mode==='full'&&!route)homePositions.set(drag.id,p);const b=$('nodes').querySelector(`[data-id="${drag.id}"]`);b.style.left=p.x+'px';b.style.top=p.y+'px';drawEdges()}
+ else{tx=drag.tx+dx;ty=drag.ty+dy;transform()}
+});
+function endPointer(e){pointers.delete(e.pointerId);pinch=null;const p=[...pointers.values()][0];drag=p?{x:p.x,y:p.y,tx,ty}:null;if(!p)$('map').classList.remove('dragging')}
+$('map').addEventListener('pointerup',endPointer);$('map').addEventListener('pointercancel',endPointer);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')){if(e.key==='Escape'){$('search').value='';renderSearch();$('search').blur()}return}if(e.key==='/'){e.preventDefault();$('app').classList.add('sidebar-open');$('menu').setAttribute('aria-expanded','true');$('search').focus()}if(e.key==='Escape'){closeMobile();reset()}if(e.key==='+'||e.key==='=')zoom(1.25);if(e.key==='-')zoom(.8);if(e.key==='0')fit()});
+// Export the actual current graph as a portable vector image, without remote dependencies.
+$('export').onclick=()=>{
+ const b=bounds(),out=svg('svg',{xmlns:NS,viewBox:`${b.x} ${b.y-50} ${b.w} ${b.h+90}`,width:Math.ceil(b.w),height:Math.ceil(b.h+90)});
+ out.append(svg('rect',{x:b.x,y:b.y-50,width:b.w,height:b.h+90,fill:'#101820'}));
+ const style=svg('style');style.textContent='.wire{fill:none;stroke:#778e9f;stroke-width:1.2;opacity:.4}.cross{stroke-dasharray:5 5}.hot{stroke:#b4e5d0;opacity:1;stroke-width:2}.faint{opacity:.12}.edge-label{font:12px sans-serif;fill:#e4f7ee;paint-order:stroke;stroke:#101820;stroke-width:5;text-anchor:middle}';out.append(style);
+ const title=svg('text',{x:b.x+10,y:b.y-18,fill:'#e6edf0','font-family':'sans-serif','font-size':20});title.textContent='AI Atlas — '+$('view-title').textContent;out.append(title);
+ const wires=$('wires').cloneNode(true);wires.removeAttribute('class');wires.removeAttribute('width');wires.removeAttribute('height');const group=svg('g');while(wires.firstChild)group.append(wires.firstChild);out.append(group);
+ visible.forEach(n=>{const p=positions.get(n.id);out.append(svg('rect',{x:p.x-85,y:p.y-29,width:170,height:58,rx:9,fill:'#17232e',stroke:n.group.color}));const label=svg('text',{x:p.x,y:p.y,fill:'#e6edf0','font-family':'sans-serif','font-size':12,'text-anchor':'middle'});const words=n.label.split(' '),lines=[''];for(const word of words){const last=lines.length-1;if((lines[last]+' '+word).trim().length>21&&lines[last])lines.push(word);else lines[last]=(lines[last]+' '+word).trim()}lines.forEach((line,i)=>{const t=svg('tspan',{x:p.x,dy:i?15:4-(lines.length-1)*7.5});t.textContent=line;label.append(t)});out.append(label)});
+ const blob=new Blob([new XMLSerializer().serializeToString(out)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=el('a');a.href=url;a.download='ai-atlas-connected.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(byId.has(id)){selected=id;mode='local';route=null;render();fit()}else reset()});
+new ResizeObserver(()=>fit(region?groups.find(g=>g.id===region).ids:undefined)).observe($('map'));
+if(byId.has(location.hash.slice(1))){selected=location.hash.slice(1);mode='local'}
+render();fit();
+</script>
 </body>
 </html>
