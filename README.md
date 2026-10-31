@@ -4,4 +4,5 @@ This repository contains an interactive AI concept graph.
 
 # Web Link
 
-https://sksub.github.io/graph/
+[https://sksub.github.io/graph/
+](https://sksubiit.github.io/graph/graph.html)
